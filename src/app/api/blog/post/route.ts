@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "../../auth/[...nextauth]/options";
-import { db, postsTable } from "@/lib/database";
+import { db, postsTable, usersTable } from "@/lib/database";
 import { and, eq } from "drizzle-orm";
 
 export const POST = async (req: NextRequest, res: NextResponse) => {
@@ -135,6 +135,69 @@ export const PATCH = async (req: NextRequest, res: NextResponse) => {
     console.error("Failed to update post", error);
     return NextResponse.json(
       { success: false, message: "Failed to update post" },
+      { status: 500 }
+    );
+  }
+};
+
+export const DELETE = async (req: NextRequest) => {
+  const session = await getServerSession(req, res, authOptions);
+
+  if (!session || !session.user) {
+    console.error("User not authenticated");
+    return NextResponse.json(
+      { success: false, message: "User not authenticated" },
+      { status: 401 } // 401 Unauthorized is more appropriate here
+    );
+  }
+
+  try {
+    const { userId, postId } = await req.json();
+
+    if (!userId || !postId) {
+      console.error("All fields are required");
+      return NextResponse.json(
+        { success: false, message: "All fields are required" },
+        { status: 400 }
+      );
+    }
+
+    if (userId !== session.user.id) {
+      console.error(
+        "Unauthorized deletion attempt by userId:",
+        session.user.id
+      );
+      return NextResponse.json(
+        {
+          success: false,
+          message: "You are not authorized to delete this post",
+        },
+        { status: 403 } // 403 Forbidden is more appropriate here
+      );
+    }
+
+    const deleteResult = await db
+      .delete(postsTable)
+      .where(and(eq(postsTable.id, postId), eq(postsTable.userId, userId)))
+      .returning();
+
+    if (deleteResult.length === 0) {
+      console.error("Post not found for deletion", { postId, userId });
+      return NextResponse.json(
+        { success: false, message: "Post not found" },
+        { status: 404 }
+      );
+    }
+
+    console.info("Post deleted successfully", { postId, userId });
+    return NextResponse.json(
+      { success: true, message: "Post deleted successfully" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error deleting post", { postId, userId, error });
+    return NextResponse.json(
+      { success: false, message: "Error deleting post" },
       { status: 500 }
     );
   }
