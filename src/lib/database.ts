@@ -26,7 +26,7 @@ export const usersTable = pgTable("user", {
 export const categoriesTable = pgTable("categories", {
   name: varchar("name", { length: 255 }).notNull().unique(),
   id: serial("id").primaryKey(),
-  snug: varchar("snug", { length: 255 }).notNull().unique(),
+  slug: varchar("slug", { length: 255 }).notNull().unique(),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -42,7 +42,7 @@ export const postsTable = pgTable("posts", {
   userId: integer("user_id")
     .references(() => usersTable.id)
     .notNull(),
-  snug: varchar("snug", { length: 255 }).notNull().unique(),
+  slug: varchar("slug", { length: 255 }).notNull().unique(),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
