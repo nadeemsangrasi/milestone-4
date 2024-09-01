@@ -53,6 +53,8 @@ export const commentsTable = pgTable("comments", {
   postId: integer("post_id")
     .references(() => postsTable.id)
     .notNull(),
+  username: varchar("username", { length: 255 }).notNull(),
+  iamgeUrl: text("imageUrl").notNull(),
   userId: integer("user_id")
     .references(() => usersTable.id)
     .notNull(),

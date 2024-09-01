@@ -16,7 +16,7 @@ export default function Home() {
     <div>
       {status === "authenticated" ? (
         <>
-          <h1>Hello user {session.user?.email}</h1>
+          <h1>Hello user {session.user?.name}</h1>
           <button
             className="py-2 px-8 font-bold text-xl bg-black text-white"
             onClick={() => signOut()}
