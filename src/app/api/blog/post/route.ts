@@ -4,6 +4,21 @@ import { authOptions } from "../../auth/[...nextauth]/options";
 import { db, postsTable } from "@/lib/database";
 import { and, eq } from "drizzle-orm";
 
+export const GET = async () => {
+  try {
+    const posts = await db.select().from(postsTable);
+
+    return NextResponse.json({ success: true, data: posts }, { status: 200 });
+  } catch (error) {
+    console.error("Failed to fetch posts", error);
+
+    return NextResponse.json(
+      { success: false, message: "Failed to fetch posts" },
+      { status: 500 }
+    );
+  }
+};
+
 export const POST = async (req: NextRequest, res: NextResponse) => {
   const session = await getServerSession(req, res, authOptions);
 
@@ -65,21 +80,6 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
     console.error("something went wrong", error);
     return NextResponse.json(
       { success: false, message: "something went wrong" },
-      { status: 500 }
-    );
-  }
-};
-
-export const GET = async () => {
-  try {
-    const posts = await db.select().from(postsTable);
-
-    return NextResponse.json({ success: true, data: posts }, { status: 200 });
-  } catch (error) {
-    console.error("Failed to fetch posts", error);
-
-    return NextResponse.json(
-      { success: false, message: "Failed to fetch posts" },
       { status: 500 }
     );
   }
