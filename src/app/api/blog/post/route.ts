@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "../../auth/[...nextauth]/options";
-import { db, postsTable, usersTable } from "@/lib/database";
+import { db, postsTable } from "@/lib/database";
 import { and, eq } from "drizzle-orm";
 
 export const POST = async (req: NextRequest, res: NextResponse) => {
@@ -11,12 +11,13 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
     console.error("user not authenticated");
     return NextResponse.json(
       { success: false, message: "user not authenticated" },
-      { status: 404 }
+      { status: 401 }
     );
   }
 
   try {
-    const { title, content, categoryId, imageUrl, slug } = await req.json();
+    const { title, content, categoryId, imageUrl, slug, userId } =
+      await req.json();
     if (!title || !content || !categoryId || !imageUrl || !slug) {
       console.error("All fields are required");
       return NextResponse.json(
@@ -24,7 +25,17 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
         { status: 500 }
       );
     }
-    await db
+    if (session.user.id !== userId) {
+      console.error("You are not authorised to publish this post");
+      return NextResponse.json(
+        {
+          success: false,
+          message: "You are not authorised to publish this post",
+        },
+        { status: 403 }
+      );
+    }
+    const post = await db
       .insert(postsTable)
       .values({
         title,
@@ -32,9 +43,16 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
         imageUrl,
         categoryId,
         slug,
-        userId: session.user.id,
+        userId,
       })
       .returning();
+    if (post.length === 0) {
+      console.error("Error publishing post");
+      return NextResponse.json(
+        { success: false, message: "Error publishing post" },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json(
       {
@@ -74,7 +92,7 @@ export const PATCH = async (req: NextRequest, res: NextResponse) => {
     console.error("User not authenticated");
     return NextResponse.json(
       { success: false, message: "User not authenticated" },
-      { status: 404 }
+      { status: 401 }
     );
   }
 
@@ -105,7 +123,7 @@ export const PATCH = async (req: NextRequest, res: NextResponse) => {
           success: false,
           message: "You are not authorised to update this post",
         },
-        { status: 400 }
+        { status: 403 }
       );
     }
 
