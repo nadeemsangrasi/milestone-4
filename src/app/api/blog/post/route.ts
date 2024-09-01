@@ -47,3 +47,18 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
     );
   }
 };
+
+export const GET = async (req: NextRequest) => {
+  try {
+    const posts = await db.select().from(postsTable);
+
+    return NextResponse.json({ success: true, data: posts });
+  } catch (error) {
+    console.error("Failed to fetch posts", error);
+
+    return NextResponse.json(
+      { success: false, message: "Failed to fetch posts" },
+      { status: 500 }
+    );
+  }
+};
