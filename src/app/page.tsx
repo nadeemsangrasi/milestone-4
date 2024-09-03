@@ -87,6 +87,7 @@ export default function Home() {
           onChange={setValue}
           placeholder="Tell your story..."
         />
+        <div dangerouslySetInnerHTML={{ __html: value }} />
       </div>
     </div>
   );
