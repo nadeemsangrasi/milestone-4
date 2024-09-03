@@ -1,5 +1,6 @@
 "use client";
 
+import ThemeSwitch from "@/components/shared/ThemeSwitch";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useState } from "react";
 import ReactQuill from "react-quill";
@@ -89,6 +90,7 @@ export default function Home() {
         />
         <div dangerouslySetInnerHTML={{ __html: value }} />
       </div>
+      <ThemeSwitch />
     </div>
   );
 }
