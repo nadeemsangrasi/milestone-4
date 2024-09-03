@@ -40,7 +40,7 @@ export default function Home() {
 
   return (
     <div>
-      {status === "authenticated" ? (
+      {/* {status === "authenticated" ? (
         <>
           <h1>Hello user {session.user?.name}</h1>
           <button
@@ -59,9 +59,9 @@ export default function Home() {
             Log in
           </button>
         </>
-      )}
+      )} */}
 
-      <div className="my-2">
+      {/* <div className="my-2">
         <input
           type="file"
           onChange={(e) => setFile(e.target.files?.[0] || null)}
@@ -89,8 +89,7 @@ export default function Home() {
           placeholder="Tell your story..."
         />
         <div dangerouslySetInnerHTML={{ __html: value }} />
-      </div>
-      <ThemeSwitch />
+      </div> */}
     </div>
   );
 }

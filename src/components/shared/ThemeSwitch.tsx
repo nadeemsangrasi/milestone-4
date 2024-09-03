@@ -4,6 +4,7 @@ import { FiSun, FiMoon } from "react-icons/fi";
 import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
+import { Moon, Sun } from "lucide-react";
 
 export default function ThemeSwitch() {
   const [mounted, setMounted] = useState(false);
@@ -25,10 +26,10 @@ export default function ThemeSwitch() {
     );
 
   if (resolvedTheme === "dark") {
-    return <FiSun onClick={() => setTheme("light")} />;
+    return <Sun onClick={() => setTheme("light")} />;
   }
 
   if (resolvedTheme === "light") {
-    return <FiMoon onClick={() => setTheme("dark")} />;
+    return <Moon onClick={() => setTheme("dark")} />;
   }
 }
