@@ -3,11 +3,13 @@ import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import ThemeSwitch from "../shared/ThemeSwitch";
-import { Home, ListChecks, SquarePen } from "lucide-react";
-import { useSession } from "next-auth/react";
+import { Home, ListChecks, LogIn, LogOut, SquarePen } from "lucide-react";
+import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const Navbar = () => {
   const { data: session, status } = useSession();
+  const router = useRouter();
   return (
     <header className="fixed left-1/2 -translate-x-1/2 w-full border-b-2">
       <div className="w-full px-4 sm:px-0 sm:w-3/4  mx-auto flex justify-between items-center py-4 my-0 flex-wrap gap-4">
@@ -23,7 +25,7 @@ const Navbar = () => {
         <div className="mx-auto">
           <ul className="flex gap-8 items-center">
             <li className="text-xl font-semibold">
-              <Link href={"#"}>
+              <Link href={"/"}>
                 <Home size={30} strokeWidth={3} absoluteStrokeWidth />
               </Link>
             </li>
@@ -34,7 +36,7 @@ const Navbar = () => {
             </li>
             <li className="text-xl font-semibold">
               <Link href={"#"}>
-                <ListChecks size={36} strokeWidth={3} absoluteStrokeWidth />
+                <ListChecks size={30} strokeWidth={3} absoluteStrokeWidth />
               </Link>
             </li>
             <li>
@@ -43,6 +45,26 @@ const Navbar = () => {
                 <ThemeSwitch />
               </Link>
             </li>
+            {status === "authenticated" ? (
+              <li>
+                <Link href={"#"}>
+                  {" "}
+                  <LogOut
+                    size={30}
+                    strokeWidth={3}
+                    absoluteStrokeWidth
+                    onClick={() => signOut()}
+                  />
+                </Link>
+              </li>
+            ) : (
+              <li>
+                <Link href={"/login"}>
+                  {" "}
+                  <LogIn size={30} strokeWidth={3} absoluteStrokeWidth />
+                </Link>
+              </li>
+            )}
           </ul>
         </div>
       </div>
