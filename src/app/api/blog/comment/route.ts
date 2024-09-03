@@ -2,12 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { commentsTable, db } from "@/lib/database";
 import { and, eq } from "drizzle-orm";
+import { authOptions } from "../../auth/[...nextauth]/options";
+import { CustomSession } from "@/types/types";
 
-export const GET = async (
-  req: NextRequest,
-  { searchParams }: { searchParams: { postId: string } }
-) => {
-  const { postId } = searchParams;
+export const GET = async (req: NextRequest) => {
+  const postId = new URL(req.nextUrl).searchParams.get("postId");
   if (!postId) {
     console.error("error getting comments");
     return NextResponse.json(
@@ -41,8 +40,8 @@ export const GET = async (
   }
 };
 
-export const POST = async (req: NextRequest, res: NextResponse) => {
-  const session = await getServerSession(req, res, authOptions);
+export const POST = async (req: NextRequest) => {
+  const session = (await getServerSession(authOptions as any)) as CustomSession;
   if (!session || !session.user) {
     console.error("user not authenticated");
     return NextResponse.json(
@@ -95,8 +94,11 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
   }
 };
 
-export const PATCH = async (req: NextRequest, res: NextResponse) => {
-  const session = await getServerSession(req, res, authOptions);
+export const PATCH = async (req: NextRequest) => {
+  const session = (await getServerSession({
+    req,
+    ...authOptions,
+  })) as any as CustomSession;
   if (!session || !session.user) {
     console.error("user not authenticated");
     return NextResponse.json(
@@ -106,8 +108,8 @@ export const PATCH = async (req: NextRequest, res: NextResponse) => {
   }
 
   try {
-    const { userId, commentId, content, username, imageUrl } = await req.json();
-    if (!userId || !commentId || !content || !username || !imageUrl) {
+    const { userId, commentId, content } = await req.json();
+    if (!userId || !commentId || !content) {
       console.error("All fields are required");
       return NextResponse.json(
         { success: false, message: "All fields are required" },
@@ -127,7 +129,7 @@ export const PATCH = async (req: NextRequest, res: NextResponse) => {
     }
     const comment = await db
       .update(commentsTable)
-      .set({ content, createdAt: new Date() })
+      .set({ content, createdAt: new Date(), isEdited: true })
       .where(
         and(eq(commentsTable.id, commentId), eq(commentsTable.userId, userId))
       )
@@ -158,7 +160,7 @@ export const PATCH = async (req: NextRequest, res: NextResponse) => {
 };
 
 export const DELETE = async (req: NextRequest) => {
-  const session = await getServerSession(req, res, authOptions);
+  const session = (await getServerSession(authOptions as any)) as CustomSession;
   if (!session || !session.user) {
     console.error("user not authenticated");
     return NextResponse.json(
@@ -167,7 +169,8 @@ export const DELETE = async (req: NextRequest) => {
     );
   }
   try {
-    const { userId, commentId } = await req.json();
+    const userId = new URL(req.nextUrl).searchParams.get("userId");
+    const commentId = new URL(req.nextUrl).searchParams.get("commentId");
     if (!userId || !commentId) {
       console.error("All fields are required");
       return NextResponse.json(
@@ -189,7 +192,10 @@ export const DELETE = async (req: NextRequest) => {
     const deletedComment = await db
       .delete(commentsTable)
       .where(
-        and(eq(commentsTable.id, commentId), eq(commentsTable.userId, userId))
+        and(
+          eq(commentsTable.id, Number(commentId)),
+          eq(commentsTable.userId, userId)
+        )
       )
       .returning();
     if (deletedComment.length === 0) {

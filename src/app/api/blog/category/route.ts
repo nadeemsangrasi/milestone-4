@@ -1,7 +1,7 @@
 import { categoriesTable, db } from "@/lib/database";
 import { NextRequest, NextResponse } from "next/server";
 
-export const GET = async (req: NextRequest) => {
+export const GET = async () => {
   try {
     const categories = await db.select().from(categoriesTable);
     if (categories.length === 0) {

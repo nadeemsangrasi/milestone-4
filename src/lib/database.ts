@@ -39,9 +39,9 @@ export const postsTable = pgTable("posts", {
   categoryId: integer("category_id")
     .references(() => categoriesTable.id)
     .notNull(),
-  userId: integer("user_id")
-    .references(() => usersTable.id)
-    .notNull(),
+  userId: varchar("user_id", { length: 255 })
+    .notNull()
+    .references(() => usersTable.id),
   slug: varchar("slug", { length: 255 }).notNull().unique(),
   createdAt: timestamp("created_at").defaultNow(),
 });
@@ -55,9 +55,10 @@ export const commentsTable = pgTable("comments", {
     .notNull(),
   username: varchar("username", { length: 255 }).notNull(),
   imageUrl: text("imageUrl").notNull(),
-  userId: integer("user_id")
-    .references(() => usersTable.id)
-    .notNull(),
+  userId: varchar("user_id", { length: 255 })
+    .notNull()
+    .references(() => usersTable.id),
+  isEdited: boolean("is_edited").notNull().default(false),
   createdAt: timestamp("created_at").defaultNow(),
 });
 

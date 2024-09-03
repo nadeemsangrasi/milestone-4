@@ -1,8 +1,9 @@
-import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "../../auth/[...nextauth]/options";
 import { db, postsTable } from "@/lib/database";
 import { and, eq } from "drizzle-orm";
+import { getServerSession } from "next-auth";
+import { CustomSession } from "@/types/types";
 
 export const GET = async () => {
   try {
@@ -19,37 +20,29 @@ export const GET = async () => {
   }
 };
 
-export const POST = async (req: NextRequest, res: NextResponse) => {
-  const session = await getServerSession(req, res, authOptions);
-
-  if (!session?.user || session) {
-    console.error("user not authenticated");
-    return NextResponse.json(
-      { success: false, message: "user not authenticated" },
-      { status: 401 }
-    );
-  }
-
+export const POST = async (req: NextRequest) => {
   try {
-    const { title, content, categoryId, imageUrl, slug, userId } =
-      await req.json();
+    const session = (await getServerSession(
+      authOptions as any
+    )) as CustomSession;
+
+    if (!session) {
+      console.error("User not authenticated");
+      return NextResponse.json(
+        { success: false, message: "User not authenticated" },
+        { status: 401 }
+      );
+    }
+    const { title, content, categoryId, imageUrl, slug } = await req.json();
+
     if (!title || !content || !categoryId || !imageUrl || !slug) {
       console.error("All fields are required");
       return NextResponse.json(
         { success: false, message: "All fields are required" },
-        { status: 500 }
+        { status: 400 }
       );
     }
-    if (session.user.id !== userId) {
-      console.error("You are not authorised to publish this post");
-      return NextResponse.json(
-        {
-          success: false,
-          message: "You are not authorised to publish this post",
-        },
-        { status: 403 }
-      );
-    }
+
     const post = await db
       .insert(postsTable)
       .values({
@@ -58,9 +51,10 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
         imageUrl,
         categoryId,
         slug,
-        userId,
+        userId: session.user.id,
       })
       .returning();
+
     if (post.length === 0) {
       console.error("Error publishing post");
       return NextResponse.json(
@@ -72,21 +66,24 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
     return NextResponse.json(
       {
         success: true,
-        message: "post published successfully",
+        message: "Post published successfully",
       },
       { status: 200 }
     );
   } catch (error) {
-    console.error("something went wrong", error);
+    console.error("Something went wrong", error);
     return NextResponse.json(
-      { success: false, message: "something went wrong" },
+      { success: false, message: "Something went wrong" },
       { status: 500 }
     );
   }
 };
 
-export const PATCH = async (req: NextRequest, res: NextResponse) => {
-  const session = await getServerSession(req, res, authOptions);
+export const PATCH = async (req: NextRequest) => {
+  const session = (await getServerSession({
+    req,
+    ...authOptions,
+  } as any)) as CustomSession;
 
   if (!session || !session.user) {
     console.error("User not authenticated");
@@ -117,11 +114,11 @@ export const PATCH = async (req: NextRequest, res: NextResponse) => {
     }
 
     if (session.user.id !== userId) {
-      console.error("You are not authorised to update this post");
+      console.error("You are not authorized to update this post");
       return NextResponse.json(
         {
           success: false,
-          message: "You are not authorised to update this post",
+          message: "You are not authorized to update this post",
         },
         { status: 403 }
       );
@@ -159,7 +156,7 @@ export const PATCH = async (req: NextRequest, res: NextResponse) => {
 };
 
 export const DELETE = async (req: NextRequest) => {
-  const session = await getServerSession(req, res, authOptions);
+  const session = (await getServerSession(authOptions as any)) as CustomSession;
 
   if (!session || !session.user) {
     console.error("User not authenticated");
@@ -170,7 +167,9 @@ export const DELETE = async (req: NextRequest) => {
   }
 
   try {
-    const { userId, postId } = await req.json();
+    const url = new URL(req.url);
+    const postId = url.searchParams.get("postId");
+    const userId = url.searchParams.get("userId");
 
     if (!userId || !postId) {
       console.error("All fields are required");
@@ -196,7 +195,9 @@ export const DELETE = async (req: NextRequest) => {
 
     const deleteResult = await db
       .delete(postsTable)
-      .where(and(eq(postsTable.id, postId), eq(postsTable.userId, userId)))
+      .where(
+        and(eq(postsTable.id, Number(postId)), eq(postsTable.userId, userId))
+      )
       .returning();
 
     if (deleteResult.length === 0) {
@@ -213,7 +214,7 @@ export const DELETE = async (req: NextRequest) => {
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error deleting post", { postId, userId, error });
+    console.error("Error deleting post", error);
     return NextResponse.json(
       { success: false, message: "Error deleting post" },
       { status: 500 }
