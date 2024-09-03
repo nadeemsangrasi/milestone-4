@@ -20,12 +20,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <AuthContext>
-        <body className={`${inter.className} bg-white dark:bg-[#020817]`}>
-          <ThemeContext>
+        <ThemeContext>
+          <body className={`${inter.className} bg-white dark:bg-[#020817]`}>
             <Navbar />
+
             {children}
-          </ThemeContext>
-        </body>
+          </body>
+        </ThemeContext>
       </AuthContext>
     </html>
   );

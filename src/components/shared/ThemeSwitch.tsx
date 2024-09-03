@@ -26,10 +26,24 @@ export default function ThemeSwitch() {
     );
 
   if (resolvedTheme === "dark") {
-    return <Sun onClick={() => setTheme("light")} />;
+    return (
+      <Sun
+        size={30}
+        strokeWidth={3}
+        absoluteStrokeWidth
+        onClick={() => setTheme("light")}
+      />
+    );
   }
 
   if (resolvedTheme === "light") {
-    return <Moon onClick={() => setTheme("dark")} />;
+    return (
+      <Moon
+        size={30}
+        strokeWidth={3}
+        absoluteStrokeWidth
+        onClick={() => setTheme("dark")}
+      />
+    );
   }
 }
