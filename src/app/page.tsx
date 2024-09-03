@@ -1,16 +1,39 @@
 "use client";
 
 import { useSession, signIn, signOut } from "next-auth/react";
+import { useState } from "react";
 
 export default function Home() {
   const { data: session, status } = useSession();
-
-  console.log("Session Data:", session?.user);
-  console.log("Session Status:", status);
+  const [file, setFile] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   if (status === "loading") {
     return <div>Loading...</div>;
   }
+
+  const handleUpload = async () => {
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        setImageUrl(result.url);
+      } else {
+        console.error("Upload failed:", result.message);
+      }
+    } catch (error) {
+      console.error("Upload failed:", error);
+    }
+  };
 
   return (
     <div>
@@ -34,6 +57,27 @@ export default function Home() {
           </button>
         </>
       )}
+
+      <div className="my-2">
+        <input
+          type="file"
+          onChange={(e) => setFile(e.target.files?.[0] || null)}
+          accept="image/*"
+        />
+        <button
+          className="py-2 px-8 font-bold text-xl bg-black text-white"
+          onClick={handleUpload}
+        >
+          Upload
+        </button>
+
+        {imageUrl && (
+          <div>
+            <h3>Uploaded Image:</h3>
+            <img src={imageUrl} alt="Uploaded" />
+          </div>
+        )}
+      </div>
     </div>
   );
 }
