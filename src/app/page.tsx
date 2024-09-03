@@ -2,11 +2,13 @@
 
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useState } from "react";
-
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.bubble.css";
 export default function Home() {
   const { data: session, status } = useSession();
   const [file, setFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [value, setValue] = useState("");
 
   if (status === "loading") {
     return <div>Loading...</div>;
@@ -77,6 +79,14 @@ export default function Home() {
             <img src={imageUrl} alt="Uploaded" />
           </div>
         )}
+      </div>
+      <div>
+        <ReactQuill
+          theme="bubble"
+          value={value}
+          onChange={setValue}
+          placeholder="Tell your story..."
+        />
       </div>
     </div>
   );
