@@ -45,7 +45,7 @@ const Navbar = () => {
               </Link>
             </li>
             <li className="text-xl font-semibold">
-              <Link href={"#"}>
+              <Link href={"/myPosts"}>
                 <ListChecks size={30} strokeWidth={3} absoluteStrokeWidth />
               </Link>
             </li>
