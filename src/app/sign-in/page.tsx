@@ -23,9 +23,9 @@ const LogInPage = () => {
   return (
     <Wrapper>
       <div className="flex items-center justify-center pt-24">
-        <div className="border-2 w-full sm:w-3/4 md:w-2/3 lg:w-1/3 py-6 px-8 mx-auto rounded-lg">
+        <div className="border-2 w-full sm:w-3/4 md:w-2/3 lg:w-1/3 py-6 px-8 mx-auto rounded-lg shadow-2xl">
           <h1 className="pb-4 text-xl font-semibold text-center">
-            Log in with google or github ?
+            Sign in with google or github ?
           </h1>
           <div className="flex gap-4 flex-col py-0">
             <Button

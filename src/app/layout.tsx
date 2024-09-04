@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Raleway } from "next/font/google";
 import "./globals.css";
 import AuthContext from "@/contexts/AuthContext";
 import ThemeContext from "@/contexts/ThemeContext";
 import Navbar from "@/components/layouts/Navbar";
 
-const inter = Inter({ subsets: ["latin"] });
+const raleway = Raleway({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Nadeem blogs",
@@ -21,7 +21,10 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <AuthContext>
         <ThemeContext>
-          <body className={`${inter.className} bg-white dark:bg-[#020817]`}>
+          <body
+            className={`${raleway.className} bg-white dark:bg-[#020817]`}
+            suppressHydrationWarning
+          >
             <Navbar />
 
             {children}

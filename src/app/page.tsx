@@ -1,12 +1,16 @@
 "use client";
 
+import HomeSection from "@/components/sections/homeSection/HomeSection";
 import ThemeSwitch from "@/components/shared/ThemeSwitch";
+import { CustomSession } from "@/types/types";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.bubble.css";
 export default function Home() {
-  const { data: session, status } = useSession();
+  const { data, status } = useSession();
+  const session = data as CustomSession;
+
   const [file, setFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [value, setValue] = useState("");
@@ -40,6 +44,7 @@ export default function Home() {
 
   return (
     <div>
+      <HomeSection />
       {/* {status === "authenticated" ? (
         <>
           <h1>Hello user {session.user?.name}</h1>
