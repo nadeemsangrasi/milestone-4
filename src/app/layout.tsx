@@ -22,7 +22,7 @@ export default function RootLayout({
       <AuthContext>
         <ThemeContext>
           <body
-            className={`${raleway.className} bg-white dark:bg-[#020817]`}
+            className={`${raleway.className} bg-white dark:bg-primary-bg`}
             suppressHydrationWarning
           >
             <Navbar />

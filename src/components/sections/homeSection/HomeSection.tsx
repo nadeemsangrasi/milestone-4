@@ -9,7 +9,7 @@ import React from "react";
 const HomeSection = () => {
   return (
     <Wrapper>
-      <div className="w-full">
+      <div className="w-full mt-16">
         <div className="grid grid-cols-3 gap-4 ">
           <Image
             src={homeImg1}

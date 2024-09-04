@@ -12,8 +12,8 @@ const Navbar = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
   return (
-    <header className="fixed left-1/2 -translate-x-1/2 w-full border-b-2">
-      <div className="w-full px-4 sm:px-0 sm:w-3/4  mx-auto flex justify-between items-center py-4 my-0 flex-wrap gap-4">
+    <header className="fixed left-1/2 -translate-x-1/2 w-full border-b-2 bg-white dark:bg-primary-bg">
+      <div className="w-full px-4 sm:px-0   mx-auto flex justify-between items-center py-4 my-0 flex-wrap gap-4">
         <div className="flex items-center gap-4 mx-auto">
           {status === "unauthenticated" ? (
             <Link href={"/sign-in"}>

@@ -16,6 +16,7 @@ const config: Config = {
       },
       colors: {
         "sunset-orange": "#FF4500",
+        "primary-bg": "#020817",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {

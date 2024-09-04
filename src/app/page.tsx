@@ -1,8 +1,11 @@
 "use client";
 
+import CategoriesSection from "@/components/sections/categoriesSection/CategoriesSection";
 import HomeSection from "@/components/sections/homeSection/HomeSection";
+import RecentPostsSection from "@/components/sections/recentPostsSection/RecentPostsSection";
 import ThemeSwitch from "@/components/shared/ThemeSwitch";
 import { CustomSession } from "@/types/types";
+import { ReceiptIndianRupeeIcon } from "lucide-react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useState } from "react";
 import ReactQuill from "react-quill";
@@ -45,6 +48,8 @@ export default function Home() {
   return (
     <div>
       <HomeSection />
+      <CategoriesSection />
+      <RecentPostsSection />
       {/* {status === "authenticated" ? (
         <>
           <h1>Hello user {session.user?.name}</h1>
