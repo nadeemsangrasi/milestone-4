@@ -13,7 +13,7 @@ const MyPostCard = () => {
         <p className="inline-block  text-lg ">2023-8-12.</p>
         <span className="text-red-500 text-lg ">CODING</span>
         <h1 className="text-3xl sm:text-2xl font-bold">
-          Essiat way to manage My state with zustang
+          Essiat way to manage My state with
         </h1>
         <p className="text-lg ">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe aut
