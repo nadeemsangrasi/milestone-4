@@ -4,7 +4,7 @@ import "./globals.css";
 import AuthContext from "@/contexts/AuthContext";
 import ThemeContext from "@/contexts/ThemeContext";
 import Navbar from "@/components/layouts/Navbar";
-
+import { Toaster } from "@/components/ui/toaster";
 const raleway = Raleway({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -28,6 +28,7 @@ export default function RootLayout({
             <Navbar />
 
             {children}
+            <Toaster />
           </body>
         </ThemeContext>
       </AuthContext>

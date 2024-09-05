@@ -18,10 +18,6 @@ export default function Home() {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [value, setValue] = useState("");
 
-  if (status === "loading") {
-    return <div>Loading...</div>;
-  }
-
   const handleUpload = async () => {
     if (!file) return;
 
