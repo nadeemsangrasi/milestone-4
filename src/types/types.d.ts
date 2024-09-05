@@ -18,3 +18,16 @@ export interface IPost {
   slug: string;
   category: string;
 }
+
+export interface IResponse {
+  success: boolean;
+  message: string;
+  data?: any;
+}
+
+export interface ICategories {
+  id: string;
+  slug: string;
+  name: string;
+  color?: string;
+}
