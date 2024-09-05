@@ -21,8 +21,18 @@ const MyPostCard = () => {
         </p>
         <div className="flex gap-4 items-center">
           <Button className=" text-lg font-semibold ">Read more</Button>
-          <Edit3 size={27} strokeWidth={3} absoluteStrokeWidth />
-          <Trash size={27} strokeWidth={3} absoluteStrokeWidth />
+          <Edit3
+            size={27}
+            strokeWidth={3}
+            absoluteStrokeWidth
+            className="cursor-pointer"
+          />
+          <Trash
+            size={27}
+            strokeWidth={3}
+            absoluteStrokeWidth
+            className="cursor-pointer"
+          />
         </div>
       </div>
     </div>

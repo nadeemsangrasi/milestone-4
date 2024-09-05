@@ -2,16 +2,15 @@ import Wrapper from "@/components/shared/Wrapper";
 import { Button } from "@/components/ui/button";
 import React from "react";
 
+export const categories = [
+  { title: "Fashion", color: "bg-pink-500 dark:bg-pink-700" },
+  { title: "Food", color: "bg-green-500 dark:bg-green-700" },
+  { title: "Coding", color: "bg-blue-500 dark:bg-blue-700" },
+  { title: "Travel", color: "bg-yellow-500 dark:bg-yellow-700" },
+  { title: "Style", color: "bg-purple-500 dark:bg-purple-700" },
+  { title: "Culture", color: "bg-red-500 dark:bg-red-700" },
+];
 const CategoriesSection = () => {
-  const categories = [
-    { title: "Fashion", color: "bg-pink-500 dark:bg-pink-700" },
-    { title: "Food", color: "bg-green-500 dark:bg-green-700" },
-    { title: "Coding", color: "bg-blue-500 dark:bg-blue-700" },
-    { title: "Travel", color: "bg-yellow-500 dark:bg-yellow-700" },
-    { title: "Style", color: "bg-purple-500 dark:bg-purple-700" },
-    { title: "Culture", color: "bg-red-500 dark:bg-red-700" },
-  ];
-
   return (
     <Wrapper>
       <div>
