@@ -11,11 +11,9 @@ export interface CustomToken extends JWT {
   id?: string;
 }
 
-export interface IPost {
+export interface IUploadPost {
   title: string;
-  content: string;
   imageUrl: string;
-  slug: string;
   category: string;
 }
 

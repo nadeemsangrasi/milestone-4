@@ -33,9 +33,17 @@ export const POST = async (req: NextRequest) => {
         { status: 401 }
       );
     }
-    const { title, content, categoryId, imageUrl, slug } = await req.json();
+    const { title, content, categorySlug, imageUrl, slug, userImageUrl } =
+      await req.json();
 
-    if (!title || !content || !categoryId || !imageUrl || !slug) {
+    if (
+      !title ||
+      !content ||
+      !categorySlug ||
+      !imageUrl ||
+      !slug ||
+      !userImageUrl
+    ) {
       console.error("All fields are required");
       return NextResponse.json(
         { success: false, message: "All fields are required" },
@@ -49,9 +57,10 @@ export const POST = async (req: NextRequest) => {
         title,
         content,
         imageUrl,
-        categoryId,
+        categorySlug,
         slug,
-        userId: session.user.id,
+        userId: session.user.id || "",
+        userImageUrl,
       })
       .returning();
 

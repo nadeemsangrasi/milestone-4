@@ -5,6 +5,7 @@ import HomeSection from "@/components/sections/homeSection/HomeSection";
 import RecentPostsSection from "@/components/sections/recentPostsSection/RecentPostsSection";
 import ThemeSwitch from "@/components/shared/ThemeSwitch";
 import { CustomSession } from "@/types/types";
+import { slugify } from "@/utils/slugify";
 import { ReceiptIndianRupeeIcon } from "lucide-react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useState } from "react";
@@ -17,29 +18,8 @@ export default function Home() {
   const [file, setFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [value, setValue] = useState("");
-
-  const handleUpload = async () => {
-    if (!file) return;
-
-    const formData = new FormData();
-    formData.append("file", file);
-
-    try {
-      const response = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      const result = await response.json();
-      if (result.success) {
-        setImageUrl(result.url);
-      } else {
-        console.error("Upload failed:", result.message);
-      }
-    } catch (error) {
-      console.error("Upload failed:", error);
-    }
-  };
+  console.log(slugify("nadeem khan Sangrasi Here"));
+  const handleUpload = async () => {};
 
   return (
     <div>

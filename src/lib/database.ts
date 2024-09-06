@@ -36,9 +36,8 @@ export const postsTable = pgTable("posts", {
   title: varchar("title", { length: 255 }).notNull(),
   content: text("content").notNull(),
   imageUrl: text("image_url").notNull(),
-  categoryId: integer("category_id")
-    .references(() => categoriesTable.id)
-    .notNull(),
+  userImageUrl: text("user_image_url").notNull(),
+  categorySlug: varchar("category_slug", { length: 255 }).notNull().unique(),
   userId: varchar("user_id", { length: 255 })
     .notNull()
     .references(() => usersTable.id),

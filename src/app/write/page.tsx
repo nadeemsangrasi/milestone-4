@@ -1,28 +1,125 @@
 "use client";
+import Loader from "@/components/shared/Loader";
 import SelectCategory from "@/components/shared/SelectCategory";
 import Wrapper from "@/components/shared/Wrapper";
 import { Button } from "@/components/ui/button";
-import { IPost } from "@/types/types";
-import { Upload } from "lucide-react";
-import React, { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { CustomSession, IUploadPost } from "@/types/types";
+import { slugify } from "@/utils/slugify";
+import axios, { AxiosError } from "axios";
+import { Loader2, Upload } from "lucide-react";
+import { useSession } from "next-auth/react";
+import React, { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.bubble.css";
 
 const WritePost = () => {
-  const [formData, setFormData] = useState<IPost>({
+  const [formData, setFormData] = useState<IUploadPost>({
     title: "",
-    content: "",
     imageUrl: "",
-    slug: "",
     category: "",
   });
-  const [isUploading, setIsLoadinf] = useState<boolean>(false);
+  const [ispublishing, setIspublishing] = useState<boolean>(false);
   const [isPublishing, setIsPublishing] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const { toast } = useToast();
+  const [value, setValue] = useState("");
+  const { data, status } = useSession();
+  const session = data as CustomSession;
 
-  console.log(formData.category);
+  useEffect(() => {
+    const uploadPost = async () => {
+      if (!file) return;
+
+      const uploadData = new FormData();
+      uploadData.append("file", file);
+
+      try {
+        setIspublishing(true);
+
+        const response = await fetch("/api/upload", {
+          method: "POST",
+          body: uploadData,
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          toast({ title: "Upload Successful", description: result.message });
+
+          // Update only the imageUrl in the formData
+          setFormData((prevData) => ({
+            ...prevData,
+            imageUrl: result.url as string,
+          }));
+        } else {
+          toast({
+            title: "Upload Failed",
+            description: result.message,
+            variant: "destructive",
+          });
+          console.error("Upload failed:", result.message);
+        }
+      } catch (error: any) {
+        console.error("Upload failed:", error);
+        toast({
+          title: "Upload Failed",
+          description: error.message,
+          variant: "destructive",
+        });
+      } finally {
+        setIspublishing(false);
+      }
+    };
+    uploadPost();
+  }, [file]);
+
+  const handlePublishPost = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsPublishing(true);
+    setMessage("");
+    try {
+      console.log("form", formData);
+      console.log("slug", slugify(formData.title || ""));
+      console.log("user id", session.user.id || "");
+      console.log("user image", session.user.image);
+
+      const res = await axios.post("/api/blog/post", {
+        title: formData.title,
+        content: value,
+        imageUrl: formData.imageUrl,
+        categorySlug: formData.category,
+        slug: slugify(formData.title || ""),
+        userId: session.user.id || "",
+        userImageUrl: session.user.image,
+      });
+      if (!res.data.success) {
+        setMessage(res.data.message);
+        console.error(res.data.message);
+        toast({
+          title: "Error publishing post",
+          description: res.data.message,
+        });
+      }
+
+      toast({
+        title: "Post published successfully",
+        description: res.data.message,
+      });
+      setFormData({ title: "", category: "", imageUrl: "" });
+      setValue("");
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      console.error("Error publishing post");
+      toast({
+        title: "Error publishing post",
+        description: axiosError.message,
+      });
+    } finally {
+      setIsPublishing(false);
+    }
+  };
   return (
     <Wrapper>
       <div className="py-12">
@@ -30,13 +127,17 @@ const WritePost = () => {
           Write your experience
         </h1>
         <div className="my-8">
-          <form>
+          <form onSubmit={handlePublishPost}>
             <div>
               <input
+                value={formData.title}
+                onChange={(e) =>
+                  setFormData({ ...formData, title: e.target.value })
+                }
                 type="text"
                 id="title"
                 placeholder="Write title..."
-                className="outline-none bg-transparent text-4xl bg-gray-300 placeholder:text-black p-3 w-full rounded-lg text-black"
+                className="outline-none  text-4xl bg-gray-300  placeholder:text-black p-3 w-full rounded-lg text-black"
               />
             </div>
             <div className="my-4">
@@ -47,13 +148,26 @@ const WritePost = () => {
                 htmlFor="file"
                 className="cursor-pointer flex items-center border-2 border-dashed p-3 rounded-lg w-fit bg-gray-300 text-black"
               >
-                <Upload
-                  size={30}
-                  strokeWidth={3}
-                  absoluteStrokeWidth
-                  className="inline mx-2"
-                />
-                <span className="text-2xl font-bold">upload</span>
+                {ispublishing ? (
+                  <Loader2
+                    size={30}
+                    strokeWidth={3}
+                    absoluteStrokeWidth
+                    className="inline mx-2"
+                  />
+                ) : (
+                  <>
+                    <Upload
+                      size={30}
+                      strokeWidth={3}
+                      absoluteStrokeWidth
+                      className="inline mx-2"
+                    />
+                  </>
+                )}
+                <span className="text-2xl font-bold">
+                  {ispublishing ? "publishing..." : "Upload Image"}
+                </span>
               </label>
 
               <input
@@ -68,17 +182,28 @@ const WritePost = () => {
               <ReactQuill
                 theme="bubble"
                 className="bg-gray-300 text-black p-4 rounded-lg"
-                value={formData.content}
-                onChange={(e: any) => {
-                  setFormData({
-                    ...formData,
-                    content: e.target.value,
-                  });
-                }}
-                placeholder="Write your experiance..."
+                value={value}
+                onChange={setValue}
+                placeholder="Write content..."
               />
             </div>
-            <Button className=" text-xl sm:text-2xl font-bold ">Publish</Button>
+            {formData.title}
+            {formData.category}
+            <Button
+              type="submit"
+              className=" text-xl sm:text-2xl font-bold "
+              disabled={
+                formData.category !== "" &&
+                formData.title !== "" &&
+                value !== "" &&
+                formData.imageUrl !== "" &&
+                !isPublishing
+                  ? false
+                  : true
+              }
+            >
+              {isPublishing ? "Publishing..." : "Publish"}
+            </Button>
           </form>
         </div>
       </div>

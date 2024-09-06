@@ -18,28 +18,32 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { IPost } from "@/types/types";
+import { IUploadPost } from "@/types/types";
 
-const frameworks = [
+const categories: { slug: string; label: string }[] = [
   {
-    snug: "next.js",
-    label: "Next.js",
+    slug: "fashion",
+    label: "Fashion",
   },
   {
-    snug: "sveltekit",
-    label: "SvelteKit",
+    slug: "food",
+    label: "Food",
   },
   {
-    snug: "nuxt.js",
-    label: "Nuxt.js",
+    slug: "coding",
+    label: "Coding",
   },
   {
-    snug: "remix",
-    label: "Remix",
+    slug: "style",
+    label: "Style",
   },
   {
-    snug: "astro",
-    label: "Astro",
+    slug: "travel",
+    label: "Travel",
+  },
+  {
+    slug: "culture",
+    label: "Culture",
   },
 ];
 
@@ -47,8 +51,8 @@ export default function SelectCategory({
   formData,
   setFormData,
 }: {
-  formData: IPost;
-  setFormData: React.Dispatch<React.SetStateAction<IPost>>;
+  formData: IUploadPost;
+  setFormData: React.Dispatch<React.SetStateAction<IUploadPost>>;
 }) {
   const [open, setOpen] = React.useState(false);
 
@@ -65,8 +69,9 @@ export default function SelectCategory({
           className="w-[200px] justify-between"
         >
           {formData.category
-            ? frameworks.find(
-                (framework) => framework.snug === formData.category
+            ? categories.find(
+                (category: { slug: string; label: string }) =>
+                  category.slug === formData.category
               )?.label
             : "Select category..."}
           <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -78,10 +83,10 @@ export default function SelectCategory({
           <CommandList>
             <CommandEmpty>No category found.</CommandEmpty>
             <CommandGroup>
-              {frameworks.map((framework) => (
+              {categories.map((category: { slug: string; label: string }) => (
                 <CommandItem
-                  key={framework.snug}
-                  value={framework.snug}
+                  key={category.slug}
+                  value={category.slug}
                   onSelect={(currentValue) => {
                     setFormData({
                       ...formData,
@@ -91,11 +96,11 @@ export default function SelectCategory({
                     setOpen(false);
                   }}
                 >
-                  {framework.label}
+                  {category.label}
                   <CheckIcon
                     className={cn(
                       "ml-auto h-4 w-4",
-                      formData.category === framework.snug
+                      formData.category === category.slug
                         ? "opacity-100"
                         : "opacity-0"
                     )}

@@ -1,4 +1,5 @@
 "use client";
+import Loader from "@/components/shared/Loader";
 import Wrapper from "@/components/shared/Wrapper";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -18,7 +19,7 @@ export const colors = [
 ];
 const CategoriesSection = () => {
   const [categories, setCategories] = useState<any>([]);
-  const [message, setMessage] = useState("");
+  const [Error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
@@ -28,7 +29,7 @@ const CategoriesSection = () => {
 
       const res: any = await fetchCategoriesFromDb();
       if (!res.success) {
-        setMessage(res.message);
+        setError(res.message);
         console.error(res.message);
         toast({
           title: "Error fetching categories",
@@ -53,14 +54,13 @@ const CategoriesSection = () => {
           Popular Categories
         </h1>
         {loading ? (
-          <div className="flex items-center gap-2 mt-8">
-            <h1>
-              <Loader2 size={32} strokeWidth={3} absoluteStrokeWidth />
-            </h1>
-            <span className="text-xl font-semibold ">Loading categories</span>
-          </div>
+          <>
+            <Loader label="Loading categories" />
+            {Error && Error}
+          </>
         ) : (
           <div className="mt-6 grid grid-cols-2  sm:grid-cols-3 md:grid-cols-6 gap-4">
+            {Error && Error}
             {categories.map(({ id, name, color }: ICategories) => (
               <Button
                 key={id}
