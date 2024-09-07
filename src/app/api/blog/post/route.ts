@@ -33,8 +33,15 @@ export const POST = async (req: NextRequest) => {
         { status: 401 }
       );
     }
-    const { title, content, categorySlug, imageUrl, slug, userImageUrl } =
-      await req.json();
+    const {
+      title,
+      content,
+      categorySlug,
+      imageUrl,
+      slug,
+      userImageUrl,
+      username,
+    } = await req.json();
 
     if (
       !title ||
@@ -42,6 +49,7 @@ export const POST = async (req: NextRequest) => {
       !categorySlug ||
       !imageUrl ||
       !slug ||
+      !username ||
       !userImageUrl
     ) {
       console.error("All fields are required");
@@ -55,6 +63,7 @@ export const POST = async (req: NextRequest) => {
       .insert(postsTable)
       .values({
         title,
+        username,
         content,
         imageUrl,
         categorySlug,

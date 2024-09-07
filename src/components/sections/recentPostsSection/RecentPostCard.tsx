@@ -3,26 +3,23 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { Edit, Edit2, Edit3, Trash } from "lucide-react";
+import { Edit3, Trash } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { CustomSession, IResponsePost } from "@/types/types";
-import { getSingleCategory } from "@/lib/getSingleCategory";
-import dayjs from "dayjs";
-import { useRouter } from "next/navigation";
 
-const RecentPostCard = ({ post }: { post: IResponsePost }) => {
-  const [category, setCategory] = useState("");
+import dayjs from "dayjs";
+
+import Link from "next/link";
+
+const RecentPostCard = ({
+  post,
+  category,
+}: {
+  post: IResponsePost;
+  category: string;
+}) => {
   const { data, status } = useSession();
   const session = data as CustomSession;
-  const router = useRouter();
-
-  useEffect(() => {
-    const updateCategory = async () => {
-      const category = await getSingleCategory(post.categorySlug);
-      setCategory(category.name);
-    };
-    updateCategory();
-  }, []);
 
   return (
     <div className="lg:flex  justify-between lg:w-[98%] gap-4">
@@ -47,7 +44,7 @@ const RecentPostCard = ({ post }: { post: IResponsePost }) => {
           />
           <div>
             <p className="font-semibold text-black dark:text-white">
-              {post.userId === session.user.id ? "you" : "author"}
+              {post.userId === session?.user.id ? "you" : post.username}
             </p>
             <p className="text-sm text-gray-700 dark:text-gray-400  ]">
               {" "}
@@ -61,11 +58,8 @@ const RecentPostCard = ({ post }: { post: IResponsePost }) => {
           {post.content.split("<p>")[1].slice(0, 100)}....
         </p>
         <div className="flex gap-4 items-center">
-          <Button
-            className="bg-sunset-orange text-xl sm:text-2xl font-semibold "
-            onClick={() => router.push(`/posts/${post.slug}`)}
-          >
-            Read more
+          <Button className="bg-sunset-orange text-xl sm:text-2xl font-semibold ">
+            <Link href={"/posts/" + post.slug}>Read more</Link>
           </Button>
           {status === "authenticated" && session.user.id === post?.userId && (
             <>

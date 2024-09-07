@@ -88,6 +88,7 @@ const WritePost = () => {
       const res = await axios.post("/api/blog/post", {
         title: formData.title,
         content: value,
+        username: session.user.name || "",
         imageUrl: formData.imageUrl,
         categorySlug: formData.category,
         slug: slugify(formData.title || ""),

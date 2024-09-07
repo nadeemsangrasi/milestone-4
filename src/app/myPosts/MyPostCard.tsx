@@ -7,6 +7,8 @@ import { IResponsePost } from "@/types/types";
 import { getSingleCategory } from "@/lib/getSingleCategory";
 import dayjs from "dayjs";
 
+import Link from "next/link";
+
 const MyPostCard = async ({ post }: { post: IResponsePost }) => {
   const category = await getSingleCategory(post.categorySlug);
 
@@ -43,7 +45,9 @@ const MyPostCard = async ({ post }: { post: IResponsePost }) => {
           {post.content.split("<p>")[1].slice(0, 100)}....
         </p>
         <div className="flex gap-4 items-center">
-          <Button className=" text-lg font-semibold ">Read more</Button>
+          <Button className=" text-lg font-semibold ">
+            <Link href={"/posts/" + post.slug}>Read more</Link>
+          </Button>
           <Edit3
             size={27}
             strokeWidth={3}

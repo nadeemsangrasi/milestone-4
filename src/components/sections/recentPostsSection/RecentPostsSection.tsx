@@ -5,35 +5,37 @@ import { useToast } from "@/hooks/use-toast";
 import { useSession } from "next-auth/react";
 import { CustomSession, IResponsePost } from "@/types/types";
 import { fetchPostsFromDb } from "@/lib/fetchPosts";
+import { getSingleCategory } from "@/lib/getSingleCategory";
 
-const RecentPostsSection = () => {
-  const [posts, setPosts] = useState<any>([]);
-  const [Error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const { toast } = useToast();
-  const { data, status } = useSession();
-  const session = data as CustomSession;
+const RecentPostsSection = async () => {
+  const posts = await fetchPostsFromDb();
+  // const [posts, setPosts] = useState<any>([]);
+  // const [Error, setError] = useState("");
+  // const [loading, setLoading] = useState(false);
+  // const { toast } = useToast();
+  // const { data, status } = useSession();
+  // const session = data as CustomSession;
 
-  useEffect(() => {
-    setLoading(true);
-    setError("");
-    const fetchPosts = async () => {
-      const res = await fetchPostsFromDb();
+  // useEffect(() => {
+  //   setLoading(true);
+  //   setError("");
+  //   const fetchPosts = async () => {
+  //     const res = await fetchPostsFromDb();
 
-      if (!res.success) {
-        setError(res.message);
-        toast({
-          title: "Error fetching posts",
-          description: res.message,
-          variant: "destructive",
-        });
-      }
-      const posts = res.data?.slice(0, 4) ?? [];
-      setPosts(posts);
-      setLoading(false);
-    };
-    fetchPosts();
-  }, []);
+  //     if (!res.success) {
+  //       setError(res.message);
+  //       toast({
+  //         title: "Error fetching posts",
+  //         description: res.message,
+  //         variant: "destructive",
+  //       });
+  //     }
+  //     const posts = res.data?.slice(0, 4) ?? [];
+  //     setPosts(posts);
+  //     setLoading(false);
+  //   };
+  //   fetchPosts();
+  // }, []);
 
   return (
     <Wrapper>
@@ -41,12 +43,19 @@ const RecentPostsSection = () => {
         Recent Post
       </h1>
       <div className="space-y-8">
-        {posts.length === 0 ? (
+        {posts.data.length === 0 ? (
           <h1 className="mx-2 text-xl font-semibold">No posts found</h1>
         ) : (
-          posts.map((post: IResponsePost) => (
-            <RecentPostCard key={post.id} post={post} />
-          ))
+          posts.data.map(async (post: IResponsePost) => {
+            const category = await getSingleCategory(post.categorySlug);
+            return (
+              <RecentPostCard
+                key={post.id}
+                post={post}
+                category={category?.name}
+              />
+            );
+          })
         )}
       </div>
     </Wrapper>

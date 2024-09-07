@@ -1,5 +1,3 @@
-"use client";
-
 import CategoriesSection from "@/components/sections/categoriesSection/CategoriesSection";
 import HomeSection from "@/components/sections/homeSection/HomeSection";
 import RecentPostsSection from "@/components/sections/recentPostsSection/RecentPostsSection";
@@ -12,14 +10,14 @@ import { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.bubble.css";
 export default function Home() {
-  const { data, status } = useSession();
-  const session = data as CustomSession;
+  // const { data, status } = useSession();
+  // const session = data as CustomSession;
 
-  const [file, setFile] = useState<File | null>(null);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [value, setValue] = useState("");
-  console.log(slugify("nadeem khan Sangrasi Here"));
-  const handleUpload = async () => {};
+  // const [file, setFile] = useState<File | null>(null);
+  // const [imageUrl, setImageUrl] = useState<string | null>(null);
+  // const [value, setValue] = useState("");
+  // console.log(slugify("nadeem khan Sangrasi Here"));
+  // const handleUpload = async () => {};
 
   return (
     <div>

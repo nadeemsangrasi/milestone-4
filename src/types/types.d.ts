@@ -19,6 +19,7 @@ export interface IUploadPost {
 export interface IResponsePost {
   id: string;
   title: string;
+  username: string;
   content: string;
   imageUrl: string;
   userImageUrl: string;

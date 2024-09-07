@@ -34,6 +34,7 @@ export const categoriesTable = pgTable("categories", {
 export const postsTable = pgTable("posts", {
   id: serial("id").primaryKey(),
   title: varchar("title", { length: 255 }).notNull(),
+  username: varchar("username", { length: 255 }).notNull(),
   content: text("content").notNull(),
   imageUrl: text("image_url").notNull(),
   userImageUrl: text("user_image_url").notNull(),
