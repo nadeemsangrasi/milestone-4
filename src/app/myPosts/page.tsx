@@ -1,8 +1,10 @@
 import Wrapper from "@/components/shared/Wrapper";
-import React from "react";
 import MyPostCard from "./MyPostCard";
+import { fetchPostsFromDb } from "@/lib/fetchPosts";
+import { IResponsePost } from "@/types/types";
 
-const MyPosts = () => {
+const MyPosts = async () => {
+  const posts = await fetchPostsFromDb();
   return (
     <Wrapper>
       <div className="py-16">
@@ -10,9 +12,9 @@ const MyPosts = () => {
           Explore your posts
         </h1>
         <div className="flex justify-between items-center gap-4 flex-wrap my-16">
-          <MyPostCard />
-          <MyPostCard />
-          <MyPostCard />
+          {posts.data.map((post: IResponsePost) => (
+            <MyPostCard key={post.id} post={post} />
+          ))}
         </div>
       </div>
     </Wrapper>

@@ -16,6 +16,17 @@ export interface IUploadPost {
   imageUrl: string;
   category: string;
 }
+export interface IResponsePost {
+  id: string;
+  title: string;
+  content: string;
+  imageUrl: string;
+  userImageUrl: string;
+  categorySlug: string;
+  userId: string;
+  slug: string;
+  createdAt: string;
+}
 
 export interface IResponse {
   success: boolean;

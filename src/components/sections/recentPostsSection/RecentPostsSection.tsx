@@ -3,7 +3,7 @@ import RecentPostCard from "./RecentPostCard";
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useSession } from "next-auth/react";
-import { CustomSession } from "@/types/types";
+import { CustomSession, IResponsePost } from "@/types/types";
 import { fetchPostsFromDb } from "@/lib/fetchPosts";
 
 const RecentPostsSection = () => {
@@ -44,10 +44,10 @@ const RecentPostsSection = () => {
         {posts.length === 0 ? (
           <h1 className="mx-2 text-xl font-semibold">No posts found</h1>
         ) : (
-          posts.map((post) => <RecentPostCard key={post.id} post={post} />)
+          posts.map((post: IResponsePost) => (
+            <RecentPostCard key={post.id} post={post} />
+          ))
         )}
-        <RecentPostCard />
-        <RecentPostCard />
       </div>
     </Wrapper>
   );

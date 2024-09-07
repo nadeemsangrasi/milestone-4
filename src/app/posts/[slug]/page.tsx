@@ -7,13 +7,16 @@ import img from "@/assets/images/home-3.jpg";
 import CommentCard from "./CommentCard";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { CustomSession, ICategories } from "@/types/types";
+import { CustomSession, ICategories, IResponsePost } from "@/types/types";
 import { Button } from "@/components/ui/button";
 import { colors } from "@/components/sections/categoriesSection/CategoriesSection";
 import { fetchCategoriesFromDb } from "@/lib/fetchCategories";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 import Loader from "@/components/shared/Loader";
+import { fetchPostsFromDb } from "@/lib/fetchPosts";
+import { getSingleCategory } from "@/lib/getSingleCategory";
+import dayjs from "dayjs";
 
 const PostPage = ({ params }: { params: { slug: string } }) => {
   const [categories, setCategories] = useState<any>([]);
@@ -23,6 +26,9 @@ const PostPage = ({ params }: { params: { slug: string } }) => {
   const { data, status } = useSession();
   const [comment, setComment] = useState("");
   const session = data as CustomSession;
+  const [post, setPost] = useState<IResponsePost>();
+  const { slug } = params;
+  const [category, setCategory] = useState("");
   const handleCommentSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   };
@@ -50,44 +56,57 @@ const PostPage = ({ params }: { params: { slug: string } }) => {
       setLoading(false);
     };
     setData();
+    const getPost = async () => {
+      const res = await fetchPostsFromDb();
+      const currentPost = res.data.find(
+        (post: IResponsePost) => post.slug === slug
+      );
+      setPost(currentPost);
+    };
+    getPost();
+    const setCate = async () => {
+      const res = await getSingleCategory(post?.categorySlug || "");
+      setCategory(res.name);
+    };
+    setCate();
   }, []);
   return (
     <Wrapper>
       <div className="py-16">
         <div className="my-8 mx-auto">
           <div>
-            <Image src={img} alt="image" className="rounded-lg w-full" />
+            <Image
+              src={post?.imageUrl || ""}
+              alt="image"
+              className="rounded-lg w-full"
+              height={1000}
+              width={1000}
+            />
           </div>
           <div className="mt-4 space-y-4">
             <h1 className="ext-3xl sm:text-5xl font-bold text-center lg:text-left my-2 mt-12">
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+              {post?.title}
             </h1>
             <span className="text-sunset-orange font-medium text-xl">
-              coding
+              {category}
             </span>
             <div className="flex items-center gap-2 justify-center md:justify-normal">
               <Image
-                src={img}
+                src={post?.userImageUrl || ""}
                 alt="image"
                 className="w-[40px] h-[40px] rounded-full"
+                height={1000}
+                width={1000}
               />
               <div>
-                <p className="font-semibold text-black dark:text-white">
-                  author
-                </p>
+                <p className="font-semibold text-black dark:text-white">you</p>
                 <p className="text-sm text-gray-700 dark:text-gray-400  ]">
-                  date
+                  {dayjs(post?.createdAt).format("DD/MM/YYYY")}
                 </p>
               </div>
             </div>
             <p className="text-xl">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Itaque
-              sunt suscipit rerum animi alias omnis earum? Sequi voluptate sit
-              natus rerum, alias in, maxime illo ipsam dolore dolor quibusdam
-              doloremque? Lorem ipsum dolor sit amet consectetur, adipisicing
-              elit. Esse inventore velit natus nulla unde at provident, nostrum
-              repellat voluptatibus reprehenderit perferendis perspiciatis!
-              Accusantium veritatis a magni asperiores fugiat facilis numquam?
+              <div dangerouslySetInnerHTML={{ __html: post?.content }} />
             </p>
           </div>
         </div>
