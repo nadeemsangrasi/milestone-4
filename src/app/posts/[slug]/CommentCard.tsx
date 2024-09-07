@@ -2,7 +2,8 @@ import Image from "next/image";
 import React from "react";
 import img from "@/assets/images/home-3.jpg";
 import { Edit, Edit2, Edit2Icon, Edit3, Trash } from "lucide-react";
-const CommentCard = ({ username, imageUrl, content, date }: any) => {
+import { IResponseComment } from "@/types/types";
+const CommentCard = ({ comment }: { comment: IResponseComment }) => {
   return (
     <div className="mb-4 p-3  rounded-lg text-white">
       <div className="flex items-center gap-2">

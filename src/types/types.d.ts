@@ -41,3 +41,22 @@ export interface ICategories {
   name: string;
   color?: string;
 }
+
+export interface IResponseComment {
+  id: string;
+  content: string;
+  postId: string;
+  username: string;
+  imageUrl: string;
+  userId: string;
+  isEdited: boolean;
+  createdAt: string;
+}
+
+export interface IComment {
+  postId: string;
+  userId: string;
+  content: string;
+  username: string;
+  imageUrl: string;
+}

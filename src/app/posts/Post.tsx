@@ -45,7 +45,7 @@ const Post = ({ post }: { post: IResponsePost }) => {
           {post?.title}
         </h1>
         <span className="text-sunset-orange font-medium text-xl">
-          {category}
+          {category.toUpperCase()}
         </span>
         <div className="flex items-center gap-2 justify-center md:justify-normal">
           <Image

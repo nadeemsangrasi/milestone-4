@@ -30,7 +30,7 @@ const PostPage = async ({ params }: { params: { slug: string } }) => {
       <div className="py-16">
         <Post post={post} />
         <div>
-          <Comments />
+          <Comments post={post} />
           <div className="md:flex justify-between">
             <div className="md:w-3/4">
               <CommentCard />

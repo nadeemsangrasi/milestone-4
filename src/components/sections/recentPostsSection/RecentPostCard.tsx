@@ -33,7 +33,9 @@ const RecentPostCard = ({
         />
       </div>
       <div className="space-y-4 lg:w-1/2 sm:px-4 py-2 text-center lg:text-left">
-        <span className="text-red-500 text-lg sm:text-xl">{category}</span>
+        <span className="text-red-500 text-lg sm:text-xl">
+          {category.toUpperCase()}
+        </span>
         <div className="flex items-center gap-2 justify-center md:justify-normal">
           <Image
             src={post.userImageUrl}

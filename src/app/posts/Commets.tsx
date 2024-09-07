@@ -1,16 +1,53 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { CustomSession } from "@/types/types";
-import { Loader2 } from "lucide-react";
+import { CustomSession, IResponsePost } from "@/types/types";
+import { Link, Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
-import React, { useState } from "react";
-import CommentCard from "./[slug]/CommentCard";
-import Categories from "@/components/sections/categoriesSection/Categories";
+import React, { useState, FormEventHandler } from "react";
+import axios, { AxiosError } from "axios";
+import { useToast } from "@/hooks/use-toast";
 
-const Commets = () => {
+const Commets = ({ post }: { post: IResponsePost }) => {
   const { data, status } = useSession();
-  const [comment, setComment] = useState("");
   const session = data as CustomSession;
+  const [comment, setComment] = useState<string>("");
+  const [isSubmiting, setIsSubmiting] = useState(false);
+  const { toast } = useToast();
+  const handleSubmitComment = async (e: any) => {
+    e.preventDefault();
+    setIsSubmiting(true);
+    try {
+      const res: any = await axios.post("/api/blog/comment", {
+        content: comment,
+        imageUrl: session.user.image,
+        postId: post.id,
+        userId: session.user.id,
+        username: session.user.name,
+      });
+      if (!res.success) {
+        toast({
+          title: "Faild to comment",
+          description: res.message,
+          variant: "destructive",
+        });
+      }
+
+      toast({
+        title: "comment sanded",
+        description: res.message,
+      });
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      console.error("Faild to comment", axiosError);
+      toast({
+        title: "Faild to comment",
+        description: axiosError.message,
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmiting(false);
+    }
+  };
   return (
     <>
       <h1 className="text-3xl sm:text-4xl font-bold text-center lg:text-left my-2 mt-12">
@@ -31,7 +68,7 @@ const Commets = () => {
           className="mx-4 my-4"
         />
       ) : (
-        <form>
+        <form onSubmit={handleSubmitComment}>
           <div className="flex gap-2 w-full md:w-1/2 items-center my-2">
             <input
               type="text"
@@ -41,7 +78,13 @@ const Commets = () => {
               value={comment}
               onChange={(event) => setComment(event.target.value)}
             />
-            <Button className=" text-xl  font-bold">Sand</Button>
+            <Button
+              className=" text-xl  font-bold"
+              type="submit"
+              disabled={isSubmiting || comment === ""}
+            >
+              {isSubmiting ? "sending..." : "sand"}
+            </Button>
           </div>
         </form>
       )}
