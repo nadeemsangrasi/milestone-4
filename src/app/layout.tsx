@@ -5,6 +5,7 @@ import AuthContext from "@/contexts/AuthContext";
 import ThemeContext from "@/contexts/ThemeContext";
 import Navbar from "@/components/layouts/Navbar";
 import { Toaster } from "@/components/ui/toaster";
+import PostsContext from "@/contexts/PostsContext";
 const raleway = Raleway({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -21,15 +22,17 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <AuthContext>
         <ThemeContext>
-          <body
-            className={`${raleway.className} bg-white dark:bg-primary-bg`}
-            suppressHydrationWarning
-          >
-            <Navbar />
+          <PostsContext>
+            <body
+              className={`${raleway.className} bg-white dark:bg-primary-bg`}
+              suppressHydrationWarning
+            >
+              <Navbar />
 
-            {children}
-            <Toaster />
-          </body>
+              {children}
+              <Toaster />
+            </body>
+          </PostsContext>
         </ThemeContext>
       </AuthContext>
     </html>

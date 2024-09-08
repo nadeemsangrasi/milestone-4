@@ -1,10 +1,13 @@
+"use client";
 import Wrapper from "@/components/shared/Wrapper";
 import MyPostCard from "./MyPostCard";
-import { fetchPostsFromDb } from "@/lib/fetchPosts";
 import { IResponsePost } from "@/types/types";
+import { usePosts } from "@/contexts/PostsContext";
+import Loader from "@/components/shared/Loader";
 
-const MyPosts = async () => {
-  const posts = await fetchPostsFromDb();
+const MyPosts = () => {
+  const { posts, isLoading, getSingleCategory } = usePosts();
+
   return (
     <Wrapper>
       <div className="py-16">
@@ -12,7 +15,12 @@ const MyPosts = async () => {
           Explore your posts
         </h1>
         <div className="flex justify-between items-center gap-4 flex-wrap my-16">
-          {posts.data.map((post: IResponsePost) => (
+          {isLoading && (
+            <div className="text-center">
+              <Loader label="Loading Posts" />
+            </div>
+          )}
+          {posts.map((post: IResponsePost) => (
             <MyPostCard key={post.id} post={post} />
           ))}
         </div>

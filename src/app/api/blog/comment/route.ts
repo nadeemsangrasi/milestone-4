@@ -4,6 +4,7 @@ import { commentsTable, db } from "@/lib/database";
 import { and, eq } from "drizzle-orm";
 import { authOptions } from "../../auth/[...nextauth]/options";
 import { CustomSession } from "@/types/types";
+import { revalidatePath } from "next/cache";
 
 export const GET = async (req: NextRequest) => {
   const postId = new URL(req.nextUrl).searchParams.get("postId");
@@ -81,8 +82,13 @@ export const POST = async (req: NextRequest) => {
         { status: 500 }
       );
     }
+
     return NextResponse.json(
-      { success: true, message: "comment published successfully" },
+      {
+        success: true,
+        message: "comment published successfully",
+        data: comment[0],
+      },
       { status: 200 }
     );
   } catch (error) {
@@ -144,7 +150,11 @@ export const PATCH = async (req: NextRequest) => {
     }
 
     return NextResponse.json(
-      { success: true, message: "comment updated successfully" },
+      {
+        success: true,
+        message: "comment updated successfully",
+        data: comment[0],
+      },
       { status: 200 }
     );
   } catch (error) {

@@ -7,8 +7,7 @@ import { slugify } from "@/utils/slugify";
 import { ReceiptIndianRupeeIcon } from "lucide-react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useState } from "react";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.bubble.css";
+
 export default function Home() {
   // const { data, status } = useSession();
   // const session = data as CustomSession;

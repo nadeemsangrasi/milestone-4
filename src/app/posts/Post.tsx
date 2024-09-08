@@ -7,8 +7,9 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { CustomSession, IResponsePost } from "@/types/types";
 import { useToast } from "@/hooks/use-toast";
-import { getSingleCategory } from "@/lib/getSingleCategory";
+
 import dayjs from "dayjs";
+import { usePosts } from "@/contexts/PostsContext";
 const Post = ({ post }: { post: IResponsePost }) => {
   const [Error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -16,19 +17,9 @@ const Post = ({ post }: { post: IResponsePost }) => {
   const { data, status } = useSession();
   const [comment, setComment] = useState("");
   const session = data as CustomSession;
+  const { getSingleCategory } = usePosts();
+  const category = getSingleCategory(post?.categorySlug);
 
-  const [category, setCategory] = useState("");
-  const handleCommentSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-  };
-
-  useEffect(() => {
-    const setCate = async () => {
-      const res = await getSingleCategory(post?.categorySlug || "");
-      setCategory(res.name);
-    };
-    setCate();
-  }, []);
   return (
     <div className="my-8 mx-auto">
       <div>
@@ -45,7 +36,7 @@ const Post = ({ post }: { post: IResponsePost }) => {
           {post?.title}
         </h1>
         <span className="text-sunset-orange font-medium text-xl">
-          {category.toUpperCase()}
+          {category.name.toUpperCase()}
         </span>
         <div className="flex items-center gap-2 justify-center md:justify-normal">
           <Image

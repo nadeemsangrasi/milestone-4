@@ -1,10 +1,10 @@
-import { IResponse } from "@/types/types";
 import axios, { AxiosError } from "axios";
-export const fetchCategoriesFromDb = async (): Promise<
-  IResponse | AxiosError
-> => {
+
+export const fetchCommentsFromDb = async (postId: string) => {
   try {
-    const res = await axios.get("http://localhost:3000/api/blog/category");
+    const res = await axios.get(
+      "http://localhost:3000/api/blog/comment?postId=" + postId
+    );
     return res.data;
   } catch (error) {
     console.error("Error fetching categories");

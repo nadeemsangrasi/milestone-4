@@ -1,25 +1,21 @@
 "use client";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Edit3, Trash } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { CustomSession, IResponsePost } from "@/types/types";
+import { CustomSession, ICategories, IResponsePost } from "@/types/types";
 
 import dayjs from "dayjs";
 
 import Link from "next/link";
+import { usePosts } from "@/contexts/PostsContext";
 
-const RecentPostCard = ({
-  post,
-  category,
-}: {
-  post: IResponsePost;
-  category: string;
-}) => {
+const RecentPostCard = ({ post }: { post: IResponsePost }) => {
   const { data, status } = useSession();
   const session = data as CustomSession;
+  const { getSingleCategory } = usePosts();
+  const category = getSingleCategory(post.categorySlug);
 
   return (
     <div className="lg:flex  justify-between lg:w-[98%] gap-4">
@@ -34,7 +30,7 @@ const RecentPostCard = ({
       </div>
       <div className="space-y-4 lg:w-1/2 sm:px-4 py-2 text-center lg:text-left">
         <span className="text-red-500 text-lg sm:text-xl">
-          {category.toUpperCase()}
+          {category.name?.toUpperCase()}
         </span>
         <div className="flex items-center gap-2 justify-center md:justify-normal">
           <Image

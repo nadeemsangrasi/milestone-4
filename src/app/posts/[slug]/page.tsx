@@ -1,9 +1,12 @@
 import Wrapper from "@/components/shared/Wrapper";
 import Post from "../Post";
-import Comments from "@/app/posts/Commets";
+
 import axios, { AxiosError } from "axios";
-import CommentCard from "./CommentCard";
 import Categories from "@/components/sections/categoriesSection/Categories";
+import { fetchCommentsFromDb } from "@/lib/fetchComments";
+
+import CommentSection from "../CommentSection";
+import { fetchPostsFromDb } from "@/lib/fetchPosts";
 const getSinglePost = async (slug: string) => {
   try {
     const res = await axios.get(
@@ -24,27 +27,26 @@ const getSinglePost = async (slug: string) => {
 const PostPage = async ({ params }: { params: { slug: string } }) => {
   const { slug } = params;
   const post = await getSinglePost(slug);
+  const comments = await fetchCommentsFromDb(post.id);
+  const posts = await fetchPostsFromDb();
 
   return (
     <Wrapper>
       <div className="py-16">
         <Post post={post} />
         <div>
-          <Comments post={post} />
-          <div className="md:flex justify-between">
-            <div className="md:w-3/4">
-              <CommentCard />
-              <CommentCard />
-              <CommentCard />
-            </div>
-            <div className="md:w-1/3">
-              <h1 className="text-2xl font-medium">Explore more</h1>
-              <div className="mt-6 grid  md:grid-cols-1 gap-4">
-                <Categories />
-              </div>
-            </div>
+          <h1 className="text-xl sm:text-2xl font-bold text-center lg:text-left">
+            Popular Categories
+          </h1>
+          <div className="mt-6 grid grid-cols-2  sm:grid-cols-3 md:grid-cols-6 gap-4">
+            <Categories />
           </div>
         </div>
+        <CommentSection
+          post={post}
+          comments={comments.data}
+          posts={posts.data.slice(0, 4)}
+        />
       </div>
     </Wrapper>
   );
