@@ -1,7 +1,13 @@
 "use client";
 import { useToast } from "@/hooks/use-toast";
-import { ICategories, IResponsePost, IPostContext } from "@/types/types";
+import {
+  ICategories,
+  IResponsePost,
+  IPostContext,
+  CustomSession,
+} from "@/types/types";
 import axios, { AxiosError } from "axios";
+import { useSession } from "next-auth/react";
 import { createContext, useContext, useEffect, useState } from "react";
 
 const PostContext = createContext<IPostContext | null>(null);
@@ -21,6 +27,8 @@ const PostsContext = ({ children }: { children: React.ReactNode }) => {
     useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isEditingPost, setIsEditingPost] = useState<boolean>(false);
+  const { data, status } = useSession();
+  const session = data as CustomSession;
   const getSingleCategory = (slug: string) => {
     if (slug && categories.length > 0) {
       return categories.find((cate) => cate.slug === slug);
@@ -94,6 +102,35 @@ const PostsContext = ({ children }: { children: React.ReactNode }) => {
   const editPost = (post: IResponsePost) => {
     setIsEditingPost(!isEditingPost);
   };
+
+  const deletePost = async (post: IResponsePost) => {
+    try {
+      const res: any = await axios.delete(
+        `/api/blog/post?userId=${session.user?.id}&postId=${post.id}`
+      );
+      if (!res.data.success) {
+        toast({
+          title: "Faild to delete post",
+          description: res.data.message,
+          variant: "destructive",
+        });
+      }
+
+      toast({
+        title: "post deleted",
+        description: res.data.message,
+      });
+      setPosts(posts.filter((myPost) => myPost.id !== post.id));
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      console.error("Faild to delete ", postaxiosError);
+      toast({
+        title: "Faild to delete post",
+        description: axiosError.message,
+        variant: "destructive",
+      });
+    }
+  };
   return (
     <PostContext.Provider
       value={{
@@ -106,6 +143,7 @@ const PostsContext = ({ children }: { children: React.ReactNode }) => {
         isEditingPost,
         setIsEditingPost,
         editPost,
+        deletePost,
       }}
     >
       {children}

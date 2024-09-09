@@ -20,7 +20,7 @@ const RecentPostsSection = () => {
             <Loader label="Loading posts..." />
           </div>
         )}
-        {posts.length === 0 ? (
+        {posts.length === 0 && !isLoading ? (
           <h1 className="mx-2 text-xl font-semibold">No posts found</h1>
         ) : (
           posts.map((post: IResponsePost) => (

@@ -17,12 +17,16 @@ const MyPosts = () => {
         <div className="flex justify-between items-center gap-4 flex-wrap my-16">
           {isLoading && (
             <div className="text-center">
-              <Loader label="Loading Posts" />
+              <Loader label="Loading posts..." />
             </div>
           )}
-          {posts.map((post: IResponsePost) => (
-            <MyPostCard key={post.id} post={post} />
-          ))}
+          {posts.length === 0 && !isLoading ? (
+            <h1 className="mx-2 text-xl font-semibold">No posts found</h1>
+          ) : (
+            posts.map((post: IResponsePost) => (
+              <MyPostCard key={post.id} post={post} />
+            ))
+          )}
         </div>
       </div>
     </Wrapper>

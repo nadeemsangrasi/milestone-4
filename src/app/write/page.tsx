@@ -15,7 +15,7 @@ import { useSession } from "next-auth/react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.bubble.css";
 import { ICategories, IResponsePost, IPostContext } from "@/types/types";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 const WritePost = ({
   searchParams,
 }: {
@@ -27,6 +27,7 @@ const WritePost = ({
     category: "",
   });
   const [isPublishing, setIsPublishing] = useState<boolean>(false);
+  const [isUploading, setIsUploading] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
   const [value, setValue] = useState("");
@@ -37,8 +38,14 @@ const WritePost = ({
     usePosts() as IPostContext;
   const { postSlug } = searchParams;
 
+  useEffect(() => {
+    if (!postSlug) {
+      setIsEditingPost(false);
+    }
+  }, [postSlug, setIsEditingPost]);
+
   const singlePost = posts?.find(
-    (post: IResponsePost) => post.slug === postSlug || ""
+    (post: IResponsePost) => post?.slug === postSlug || ""
   );
 
   const router = useRouter();
@@ -61,14 +68,14 @@ const WritePost = ({
       uploadData.append("file", file);
 
       try {
-        setIsPublishing(true);
-
+        setIsUploading(true);
         const response = await fetch("/api/upload", {
           method: "POST",
           body: uploadData,
         });
 
         const result = await response.json();
+        setIsUploading(false);
         if (result.success) {
           toast({ title: "Upload Successful", description: result.message });
 
@@ -91,8 +98,6 @@ const WritePost = ({
           description: error.message,
           variant: "destructive",
         });
-      } finally {
-        setIsPublishing(false);
       }
     };
 
@@ -129,6 +134,7 @@ const WritePost = ({
           title: "Post published successfully",
           description: res.data.message,
         });
+        setIsPublishing(false);
         setFormData({ title: "", category: "", imageUrl: "" });
         setValue("");
       }
@@ -140,15 +146,14 @@ const WritePost = ({
         description: axiosError.message,
       });
     } finally {
-      setIsPublishing(false);
     }
   };
 
   const handleUpdatePost = async (e) => {
     e.preventDefault();
 
-    setIsPublishing(true);
     try {
+      setIsPublishing(true);
       const res = await axios.patch("/api/blog/post", {
         postId: singlePost?.id,
         userId: session.user.id,
@@ -166,14 +171,23 @@ const WritePost = ({
           variant: "destructive",
         });
       } else {
-        setPosts(posts.filter((myPost) => myPost.id !== singlePost?.id));
-        setPosts([res.data.data, ...posts]);
+        setIsPublishing(false);
+        setPosts(
+          posts.filter((myPost) => {
+            if (myPost.id === singlePost?.id) {
+              return res.data.data;
+            } else {
+              return myPost;
+            }
+          })
+        );
+
         toast({
           title: "Post edited",
           description: res.data.message,
         });
+
         router.push("/posts/" + res.data.data.slug);
-        setIsEditingPost(!isEditingPost);
         setFormData({ title: "", category: "", imageUrl: "" });
         setValue("");
       }
@@ -191,7 +205,7 @@ const WritePost = ({
     <Wrapper>
       <div className="py-12">
         <h1 className="text-4xl sm:text-5xl font-bold text-center my-6">
-          Write your experience
+          {isEditingPost ? "Edit Post" : "Write your experience"}
         </h1>
         <div className="my-8">
           <form>
@@ -233,7 +247,7 @@ const WritePost = ({
                   </>
                 )}
                 <span className="text-2xl font-bold">
-                  {isPublishing ? "Publishing..." : "Upload Image"}
+                  {isUploading ? "Uploading..." : "Upload Image"}
                 </span>
               </label>
 
@@ -268,7 +282,11 @@ const WritePost = ({
               }
               onClick={isEditingPost ? handleUpdatePost : handlePublishPost}
             >
-              {isPublishing ? "Publishing..." : "Publish"}
+              {isEditingPost ? (
+                <>{isPublishing ? "saving..." : "save changes"}</>
+              ) : (
+                <>{isPublishing ? "pubklishing..." : "publish"}</>
+              )}
             </Button>
           </form>
         </div>

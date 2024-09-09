@@ -231,7 +231,6 @@ export const DELETE = async (req: NextRequest) => {
       );
     }
 
-    console.info("Post deleted successfully", { postId, userId });
     return NextResponse.json(
       { success: true, message: "Post deleted successfully" },
       { status: 200 }

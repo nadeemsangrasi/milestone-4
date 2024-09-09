@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 const RecentPostCard = ({ post }: { post: IResponsePost }) => {
   const { data, status } = useSession();
   const session = data as CustomSession;
-  const { getSingleCategory, editPost } = usePosts();
+  const { getSingleCategory, editPost, deletePost } = usePosts();
   const category = getSingleCategory(post.categorySlug);
   const router = useRouter();
 
@@ -54,7 +54,11 @@ const RecentPostCard = ({ post }: { post: IResponsePost }) => {
         <h1 className="text-3xl sm:text-3xl font-bold">{post.title}</h1>
 
         <p className="text-lg sm:text-xl">
-          {post.content.split("<p>")[1].slice(0, 100)}....
+          <div
+            dangerouslySetInnerHTML={{
+              __html: post?.content.slice(0, 100) + "....",
+            }}
+          />
         </p>
         <div className="flex gap-4 items-center">
           <Button className="bg-sunset-orange text-xl sm:text-2xl font-semibold ">
@@ -66,12 +70,19 @@ const RecentPostCard = ({ post }: { post: IResponsePost }) => {
                 size={30}
                 strokeWidth={3}
                 absoluteStrokeWidth
+                className="cursor-pointer"
                 onClick={() => {
                   router.push("/write?postSlug=" + post.slug);
                   editPost(post);
                 }}
               />
-              <Trash size={30} strokeWidth={3} absoluteStrokeWidth />
+              <Trash
+                className="cursor-pointer"
+                size={30}
+                strokeWidth={3}
+                absoluteStrokeWidth
+                onClick={() => deletePost(post)}
+              />
             </>
           )}
         </div>

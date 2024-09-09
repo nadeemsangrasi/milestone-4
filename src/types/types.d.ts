@@ -71,4 +71,6 @@ export interface IPostContext {
   isEditingPost: boolean;
   setIsEditingPost: Dispatch<SetStateAction<boolean>>;
   setPosts: Dispatch<SetStateAction<IResponsePost[]>>;
+  editPost: (post: IResponsePost) => void;
+  deletePost: (post: IResponsePost) => void;
 }

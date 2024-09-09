@@ -10,10 +10,12 @@ import dayjs from "dayjs";
 
 import Link from "next/link";
 import { usePosts } from "@/contexts/PostsContext";
+import { useRouter } from "next/navigation";
 
 const MyPostCard = ({ post }: { post: IResponsePost }) => {
-  const { getSingleCategory } = usePosts();
+  const { getSingleCategory, editPost, deletePost } = usePosts();
   const category = getSingleCategory(post.categorySlug);
+  const router = useRouter();
 
   return (
     <div className="w-[450px] h-[600px]">
@@ -47,7 +49,11 @@ const MyPostCard = ({ post }: { post: IResponsePost }) => {
         </div>
         <h1 className="text-3xl sm:text-2xl font-bold">{post.title}</h1>
         <p className="text-lg ">
-          {post.content.split("<p>")[1].slice(0, 100)}....
+          <div
+            dangerouslySetInnerHTML={{
+              __html: post?.content.slice(0, 100) + "....",
+            }}
+          />
         </p>
         <div className="flex gap-4 items-center">
           <Button className=" text-lg font-semibold ">
@@ -58,12 +64,17 @@ const MyPostCard = ({ post }: { post: IResponsePost }) => {
             strokeWidth={3}
             absoluteStrokeWidth
             className="cursor-pointer"
+            onClick={() => {
+              router.push("/write?postSlug=" + post.slug);
+              editPost(post);
+            }}
           />
           <Trash
             size={27}
             strokeWidth={3}
             absoluteStrokeWidth
             className="cursor-pointer"
+            onClick={() => deletePost(post)}
           />
         </div>
       </div>
