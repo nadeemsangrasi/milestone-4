@@ -1,16 +1,10 @@
 "use client";
 import { useToast } from "@/hooks/use-toast";
-import { ICategories, IResponsePost } from "@/types/types";
+import { ICategories, IResponsePost, IPostContext } from "@/types/types";
 import axios, { AxiosError } from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
 
-const PostContext = createContext<{
-  isLoading: boolean;
-  posts: IResponsePost[];
-  categories: ICategories[];
-  isLoadingCategories: boolean;
-  getSingleCategory: (id: string) => any;
-} | null>(null);
+const PostContext = createContext<IPostContext | null>(null);
 
 const colors = [
   "bg-pink-500 dark:bg-pink-700",
@@ -26,6 +20,7 @@ const PostsContext = ({ children }: { children: React.ReactNode }) => {
   const [isLoadingCategories, setIsLoadingCategories] =
     useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isEditingPost, setIsEditingPost] = useState<boolean>(false);
   const getSingleCategory = (slug: string) => {
     if (slug && categories.length > 0) {
       return categories.find((cate) => cate.slug === slug);
@@ -95,14 +90,22 @@ const PostsContext = ({ children }: { children: React.ReactNode }) => {
     };
     fetchCategories();
   }, []);
+
+  const editPost = (post: IResponsePost) => {
+    setIsEditingPost(!isEditingPost);
+  };
   return (
     <PostContext.Provider
       value={{
         isLoading,
         posts,
+        setPosts,
         categories,
         isLoadingCategories,
         getSingleCategory,
+        isEditingPost,
+        setIsEditingPost,
+        editPost,
       }}
     >
       {children}

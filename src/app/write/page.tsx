@@ -1,33 +1,57 @@
 "use client";
+
+import React, { useEffect, useState } from "react";
 import Loader from "@/components/shared/Loader";
 import SelectCategory from "@/components/shared/SelectCategory";
 import Wrapper from "@/components/shared/Wrapper";
 import { Button } from "@/components/ui/button";
+import { usePosts } from "@/contexts/PostsContext";
 import { useToast } from "@/hooks/use-toast";
 import { CustomSession, IUploadPost } from "@/types/types";
 import { slugify } from "@/utils/slugify";
 import axios, { AxiosError } from "axios";
 import { Loader2, Upload } from "lucide-react";
 import { useSession } from "next-auth/react";
-import React, { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.bubble.css";
-
-const WritePost = () => {
+import { ICategories, IResponsePost, IPostContext } from "@/types/types";
+import { useRouter } from "next/navigation";
+const WritePost = ({
+  searchParams,
+}: {
+  searchParams: { postSlug: string };
+}) => {
   const [formData, setFormData] = useState<IUploadPost>({
     title: "",
     imageUrl: "",
     category: "",
   });
-  const [ispublishing, setIspublishing] = useState<boolean>(false);
   const [isPublishing, setIsPublishing] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const { toast } = useToast();
   const [value, setValue] = useState("");
-  const { data, status } = useSession();
+  const { toast } = useToast();
+  const { data } = useSession();
   const session = data as CustomSession;
+  const { posts, setPosts, isEditingPost, setIsEditingPost } =
+    usePosts() as IPostContext;
+  const { postSlug } = searchParams;
+
+  const singlePost = posts?.find(
+    (post: IResponsePost) => post.slug === postSlug || ""
+  );
+
+  const router = useRouter();
+  useEffect(() => {
+    if (singlePost) {
+      setFormData({
+        title: singlePost?.title || "",
+        imageUrl: singlePost?.imageUrl || "",
+        category: singlePost?.categorySlug || "",
+      });
+      setValue(singlePost?.content || "");
+    }
+  }, [singlePost]);
 
   useEffect(() => {
     const uploadPost = async () => {
@@ -37,7 +61,7 @@ const WritePost = () => {
       uploadData.append("file", file);
 
       try {
-        setIspublishing(true);
+        setIsPublishing(true);
 
         const response = await fetch("/api/upload", {
           method: "POST",
@@ -48,7 +72,6 @@ const WritePost = () => {
         if (result.success) {
           toast({ title: "Upload Successful", description: result.message });
 
-          // Update only the imageUrl in the formData
           setFormData((prevData) => ({
             ...prevData,
             imageUrl: result.url as string,
@@ -69,9 +92,10 @@ const WritePost = () => {
           variant: "destructive",
         });
       } finally {
-        setIspublishing(false);
+        setIsPublishing(false);
       }
     };
+
     uploadPost();
   }, [file]);
 
@@ -80,11 +104,6 @@ const WritePost = () => {
     setIsPublishing(true);
     setMessage("");
     try {
-      console.log("form", formData);
-      console.log("slug", slugify(formData.title || ""));
-      console.log("user id", session.user.id || "");
-      console.log("user image", session.user.image);
-
       const res = await axios.post("/api/blog/post", {
         title: formData.title,
         content: value,
@@ -95,6 +114,7 @@ const WritePost = () => {
         userId: session.user.id || "",
         userImageUrl: session.user.image,
       });
+
       if (!res.data.success) {
         setMessage(res.data.message);
         console.error(res.data.message);
@@ -102,17 +122,19 @@ const WritePost = () => {
           title: "Error publishing post",
           description: res.data.message,
         });
+      } else {
+        setPosts([res.data.data, ...posts]);
+        router.push("/posts" + res.data.data.slug);
+        toast({
+          title: "Post published successfully",
+          description: res.data.message,
+        });
+        setFormData({ title: "", category: "", imageUrl: "" });
+        setValue("");
       }
-
-      toast({
-        title: "Post published successfully",
-        description: res.data.message,
-      });
-      setFormData({ title: "", category: "", imageUrl: "" });
-      setValue("");
     } catch (error) {
       const axiosError = error as AxiosError;
-      console.error("Error publishing post");
+      console.error("Error publishing post", axiosError);
       toast({
         title: "Error publishing post",
         description: axiosError.message,
@@ -121,14 +143,58 @@ const WritePost = () => {
       setIsPublishing(false);
     }
   };
+
+  const handleUpdatePost = async (e) => {
+    e.preventDefault();
+
+    setIsPublishing(true);
+    try {
+      const res = await axios.patch("/api/blog/post", {
+        postId: singlePost?.id,
+        userId: session.user.id,
+        categorySlug: formData.category,
+        title: formData.title,
+        content: value,
+        imageUrl: formData.imageUrl,
+        slug: slugify(formData.title || ""),
+      });
+
+      if (!res.data.success) {
+        toast({
+          title: "Failed to edit post",
+          description: res.data.message,
+          variant: "destructive",
+        });
+      } else {
+        setPosts(posts.filter((myPost) => myPost.id !== singlePost?.id));
+        setPosts([res.data.data, ...posts]);
+        toast({
+          title: "Post edited",
+          description: res.data.message,
+        });
+        router.push("/posts/" + res.data.data.slug);
+        setIsEditingPost(!isEditingPost);
+        setFormData({ title: "", category: "", imageUrl: "" });
+        setValue("");
+      }
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      console.error("Failed to edit post", axiosError);
+      toast({
+        title: "Failed to edit post",
+        description: axiosError.message,
+        variant: "destructive",
+      });
+    }
+  };
   return (
     <Wrapper>
       <div className="py-12">
-        <h1 className="text-4xl sm:text-5xl font-bold text-center  my-6">
+        <h1 className="text-4xl sm:text-5xl font-bold text-center my-6">
           Write your experience
         </h1>
         <div className="my-8">
-          <form onSubmit={handlePublishPost}>
+          <form>
             <div>
               <input
                 value={formData.title}
@@ -138,7 +204,7 @@ const WritePost = () => {
                 type="text"
                 id="title"
                 placeholder="Write title..."
-                className="outline-none  text-4xl bg-gray-300  placeholder:text-black p-3 w-full rounded-lg text-black"
+                className="outline-none text-4xl bg-gray-300 placeholder:text-black p-3 w-full rounded-lg text-black"
               />
             </div>
             <div className="my-4">
@@ -149,7 +215,7 @@ const WritePost = () => {
                 htmlFor="file"
                 className="cursor-pointer flex items-center border-2 border-dashed p-3 rounded-lg w-fit bg-gray-300 text-black"
               >
-                {ispublishing ? (
+                {isPublishing ? (
                   <Loader2
                     size={30}
                     strokeWidth={3}
@@ -167,7 +233,7 @@ const WritePost = () => {
                   </>
                 )}
                 <span className="text-2xl font-bold">
-                  {ispublishing ? "publishing..." : "Upload Image"}
+                  {isPublishing ? "Publishing..." : "Upload Image"}
                 </span>
               </label>
 
@@ -188,11 +254,9 @@ const WritePost = () => {
                 placeholder="Write content..."
               />
             </div>
-            {formData.title}
-            {formData.category}
+
             <Button
-              type="submit"
-              className=" text-xl sm:text-2xl font-bold "
+              className="text-xl sm:text-2xl font-bold"
               disabled={
                 formData.category !== "" &&
                 formData.title !== "" &&
@@ -202,6 +266,7 @@ const WritePost = () => {
                   ? false
                   : true
               }
+              onClick={isEditingPost ? handleUpdatePost : handlePublishPost}
             >
               {isPublishing ? "Publishing..." : "Publish"}
             </Button>

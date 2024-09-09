@@ -38,12 +38,13 @@ export const postsTable = pgTable("posts", {
   content: text("content").notNull(),
   imageUrl: text("image_url").notNull(),
   userImageUrl: text("user_image_url").notNull(),
-  categorySlug: varchar("category_slug", { length: 255 }).notNull().unique(),
+  categorySlug: varchar("category_slug", { length: 255 }).notNull(),
   userId: varchar("user_id", { length: 255 })
     .notNull()
     .references(() => usersTable.id),
   slug: varchar("slug", { length: 255 }).notNull().unique(),
   createdAt: timestamp("created_at").defaultNow(),
+  isEdited: boolean("is_edited").notNull().default(false),
 });
 
 // Comments Table

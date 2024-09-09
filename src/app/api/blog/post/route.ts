@@ -112,13 +112,13 @@ export const PATCH = async (req: NextRequest) => {
   }
 
   try {
-    const { postId, userId, categoryId, title, content, imageUrl, slug } =
+    const { postId, userId, categorySlug, title, content, imageUrl, slug } =
       await req.json();
 
     if (
       !postId ||
       !userId ||
-      !categoryId ||
+      !categorySlug ||
       !title ||
       !content ||
       !imageUrl ||
@@ -145,11 +145,12 @@ export const PATCH = async (req: NextRequest) => {
     const updatedPost = await db
       .update(postsTable)
       .set({
-        categoryId,
+        categorySlug,
         title,
         imageUrl,
         content,
         slug,
+        isEdited: true,
         createdAt: new Date(),
       })
       .where(and(eq(postsTable.id, postId), eq(postsTable.userId, userId)))
@@ -161,7 +162,11 @@ export const PATCH = async (req: NextRequest) => {
     }
 
     return NextResponse.json(
-      { success: true, message: "Post updated successfully" },
+      {
+        success: true,
+        message: "Post updated successfully",
+        data: updatedPost[0],
+      },
       { status: 200 }
     );
   } catch (error) {

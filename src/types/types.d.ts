@@ -27,6 +27,7 @@ export interface IResponsePost {
   userId: string;
   slug: string;
   createdAt: string;
+  isEdited: boolean;
 }
 
 export interface IResponse {
@@ -59,4 +60,15 @@ export interface IComment {
   content: string;
   username: string;
   imageUrl: string;
+}
+
+export interface IPostContext {
+  isLoading: boolean;
+  posts: IResponsePost[];
+  categories: ICategories[];
+  isLoadingCategories: boolean;
+  getSingleCategory: (id: string) => ICategories | undefined;
+  isEditingPost: boolean;
+  setIsEditingPost: Dispatch<SetStateAction<boolean>>;
+  setPosts: Dispatch<SetStateAction<IResponsePost[]>>;
 }
