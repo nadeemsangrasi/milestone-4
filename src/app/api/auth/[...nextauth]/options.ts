@@ -1,8 +1,7 @@
 import GoogleProvider from "next-auth/providers/google";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { db } from "@/lib/database";
-import { JWT } from "next-auth/jwt";
-import { Session } from "next-auth";
+
 import { CustomSession, CustomToken } from "@/types/types";
 
 export const authOptions = {
