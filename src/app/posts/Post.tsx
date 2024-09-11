@@ -31,14 +31,14 @@ const Post = ({ post }: { post: IResponsePost }) => {
           width={1000}
         />
       </div>
-      <div className="mt-4 space-y-4">
-        <h1 className="ext-3xl sm:text-5xl font-bold text-center lg:text-left my-2 mt-12">
+      <div className="mt-4 space-y-2">
+        <h1 className="text-3xl sm:text-5xl font-bold text-center lg:text-left my-2 mt-12">
           {post?.title}
         </h1>
-        <span className="text-sunset-orange font-medium text-xl">
+        <p className="text-sunset-orange text-center font-bold lg:text-start">
           {category.name.toUpperCase()}
-        </span>
-        <div className="flex items-center gap-2 justify-center md:justify-normal">
+        </p>
+        <div className="flex items-center gap-2 justify-center lg:justify-normal">
           <Image
             src={post?.userImageUrl || ""}
             alt="image"
@@ -54,6 +54,7 @@ const Post = ({ post }: { post: IResponsePost }) => {
             <p className="text-sm text-gray-700 dark:text-gray-400  ]">
               {dayjs(post?.createdAt).format("DD/MM/YYYY")}
             </p>
+            <span>{post.isEdited ? "edited" : ""}</span>
           </div>
         </div>
         <p className="text-xl">

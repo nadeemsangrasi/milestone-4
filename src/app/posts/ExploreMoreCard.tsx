@@ -17,9 +17,9 @@ const ExploreMoreCard = ({
   const category = getSingleCategory(post.categorySlug);
 
   return (
-    <div className="w-[450px] h-fit">
+    <div className="w-full sm:w-[450px] h-fit mx-auto lg:mx-0">
       <div className="space-y-2  py-2 text-center lg:text-left">
-        <div className="flex items-center gap-2 justify-center md:justify-normal">
+        <div className="flex items-center gap-2 justify-center lg:justify-normal">
           <Image
             src={post.userImageUrl}
             alt="image"
@@ -34,14 +34,18 @@ const ExploreMoreCard = ({
             <p className="text-sm text-gray-700 dark:text-gray-400  ]">
               {dayjs(post.createdAt).format("DD/MM/YYYY")}
             </p>
-            <span className="text-red-500 text-sm ">
+            <span className="text-red-500 text-sm font-bold">
               {category.name.toUpperCase()}
             </span>
           </div>
         </div>
         <h1 className="sm:text-xl font-bold">{post.title}</h1>
         <p className="text-lg ">
-          {post.content.split("<p>")[1].slice(0, 50)}....
+          <div
+            dangerouslySetInnerHTML={{
+              __html: post?.content.slice(0, 100) + "....",
+            }}
+          />
         </p>
       </div>
     </div>

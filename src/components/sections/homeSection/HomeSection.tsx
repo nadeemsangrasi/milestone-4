@@ -9,7 +9,7 @@ import React from "react";
 const HomeSection = () => {
   return (
     <Wrapper>
-      <div className="w-full mt-16">
+      <div className="w-full mt-24 sm:mt-16">
         <div className="grid grid-cols-3 gap-4 ">
           <Image
             src={homeImg1}
@@ -25,7 +25,7 @@ const HomeSection = () => {
         </div>
         <div className="mt-5 lg:flex  justify-between">
           <div className="lg:w-[56%] my-6 space-y-4 ">
-            <h1 className="text-4xl md:text-[2.9rem] font-bold dark:text-white text-black">
+            <h1 className="text-3xl sm:text-4xl md:text-[2.9rem] font-bold dark:text-white text-black">
               Welcome to Nadeem blogs
             </h1>
             <h2 className="text-xl md:text-3xl font-semibold dark:text-gray-300 mt-2 text-gray-800">

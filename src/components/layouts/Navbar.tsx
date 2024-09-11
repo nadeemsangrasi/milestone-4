@@ -3,7 +3,14 @@ import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import ThemeSwitch from "../shared/ThemeSwitch";
-import { Home, ListChecks, LogIn, LogOut, SquarePen } from "lucide-react";
+import {
+  Home,
+  ListChecks,
+  LogIn,
+  LogOut,
+  SquarePen,
+  UserRoundCheck,
+} from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
@@ -33,20 +40,45 @@ const Navbar = () => {
           )}
         </div>
         <div className="mx-auto">
-          <ul className="flex gap-8 items-center">
+          <ul className="flex gap-4 sm:gap-8 items-center">
             <li className="text-xl font-semibold">
               <Link href={"/"}>
-                <Home size={30} strokeWidth={3} absoluteStrokeWidth />
+                <Home
+                  size={30}
+                  strokeWidth={3}
+                  absoluteStrokeWidth
+                  className="cursor-pointer"
+                />
               </Link>
             </li>
             <li className="text-xl font-semibold">
               <Link href={"/write"}>
-                <SquarePen size={30} strokeWidth={3} absoluteStrokeWidth />
+                <SquarePen
+                  size={30}
+                  strokeWidth={3}
+                  absoluteStrokeWidth
+                  className="cursor-pointer"
+                />
+              </Link>
+            </li>
+            <li className="text-xl font-semibold">
+              <Link href={"/allPosts"}>
+                <ListChecks
+                  size={30}
+                  strokeWidth={3}
+                  absoluteStrokeWidth
+                  className="cursor-pointer"
+                />
               </Link>
             </li>
             <li className="text-xl font-semibold">
               <Link href={"/myPosts"}>
-                <ListChecks size={30} strokeWidth={3} absoluteStrokeWidth />
+                <UserRoundCheck
+                  size={30}
+                  strokeWidth={3}
+                  absoluteStrokeWidth
+                  className="cursor-pointer"
+                />
               </Link>
             </li>
             <li>
@@ -64,6 +96,7 @@ const Navbar = () => {
                     strokeWidth={3}
                     absoluteStrokeWidth
                     onClick={() => signOut()}
+                    className="cursor-pointer"
                   />
                 </Link>
               </li>
@@ -76,5 +109,4 @@ const Navbar = () => {
     </header>
   );
 };
-
 export default Navbar;

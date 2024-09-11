@@ -108,6 +108,7 @@ const WritePost = ({
     e.preventDefault();
     setIsPublishing(true);
     setMessage("");
+
     try {
       const res = await axios.post("/api/blog/post", {
         title: formData.title,
@@ -128,13 +129,13 @@ const WritePost = ({
           description: res.data.message,
         });
       } else {
+        setIsPublishing(false);
         setPosts([res.data.data, ...posts]);
-        router.push("/posts" + res.data.data.slug);
         toast({
           title: "Post published successfully",
           description: res.data.message,
         });
-        setIsPublishing(false);
+        router.push("/posts/" + res.data.data.slug);
         setFormData({ title: "", category: "", imageUrl: "" });
         setValue("");
       }
@@ -145,10 +146,8 @@ const WritePost = ({
         title: "Error publishing post",
         description: axiosError.message,
       });
-    } finally {
     }
   };
-
   const handleUpdatePost = async (e) => {
     e.preventDefault();
 
@@ -172,15 +171,13 @@ const WritePost = ({
         });
       } else {
         setIsPublishing(false);
-        setPosts(
-          posts.filter((myPost) => {
-            if (myPost.id === singlePost?.id) {
-              return res.data.data;
-            } else {
-              return myPost;
-            }
-          })
-        );
+        setPosts((prevPosts) => {
+          const updatedPosts = [
+            res.data.data,
+            ...prevPosts.filter((myPost) => myPost.id !== singlePost?.id),
+          ];
+          return updatedPosts;
+        });
 
         toast({
           title: "Post edited",
@@ -203,7 +200,7 @@ const WritePost = ({
   };
   return (
     <Wrapper>
-      <div className="py-12">
+      <div className="py-20 sm:py-12">
         <h1 className="text-4xl sm:text-5xl font-bold text-center my-6">
           {isEditingPost ? "Edit Post" : "Write your experience"}
         </h1>
@@ -218,7 +215,7 @@ const WritePost = ({
                 type="text"
                 id="title"
                 placeholder="Write title..."
-                className="outline-none text-4xl bg-gray-300 placeholder:text-black p-3 w-full rounded-lg text-black"
+                className="outline-none text-3xl sm:text-4xl bg-gray-300 placeholder:text-black p-3 w-full rounded-lg text-black"
               />
             </div>
             <div className="my-4">
@@ -246,7 +243,7 @@ const WritePost = ({
                     />
                   </>
                 )}
-                <span className="text-2xl font-bold">
+                <span className="text-xl sm:text-2xl font-bold">
                   {isUploading ? "Uploading..." : "Upload Image"}
                 </span>
               </label>
@@ -285,7 +282,7 @@ const WritePost = ({
               {isEditingPost ? (
                 <>{isPublishing ? "saving..." : "save changes"}</>
               ) : (
-                <>{isPublishing ? "pubklishing..." : "publish"}</>
+                <>{isPublishing ? "publishing..." : "publish"}</>
               )}
             </Button>
           </form>

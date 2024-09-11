@@ -12,14 +12,6 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 const PostContext = createContext<IPostContext | null>(null);
 
-const colors = [
-  "bg-pink-500 dark:bg-pink-700",
-  "bg-green-500 dark:bg-green-700",
-  "bg-blue-500 dark:bg-blue-700",
-  "bg-yellow-500 dark:bg-yellow-700",
-  "bg-purple-500 dark:bg-purple-700",
-  "bg-red-500 dark:bg-red-700",
-];
 const PostsContext = ({ children }: { children: React.ReactNode }) => {
   const [posts, setPosts] = useState<IResponsePost[]>([]);
   const [categories, setCategories] = useState<ICategories[]>([]);
@@ -78,12 +70,8 @@ const PostsContext = ({ children }: { children: React.ReactNode }) => {
             variant: "destructive",
           });
         }
-        const updatedCategories = res.data.data.map(
-          (cate: ICategories, index: number) => {
-            return { ...cate, color: colors[index] };
-          }
-        );
-        setCategories(updatedCategories);
+
+        setCategories(res.data.data);
       } catch (error) {
         const axiosError = error as AxiosError;
         console.error("Error fetching categories", error);
@@ -123,7 +111,7 @@ const PostsContext = ({ children }: { children: React.ReactNode }) => {
       setPosts(posts.filter((myPost) => myPost.id !== post.id));
     } catch (error) {
       const axiosError = error as AxiosError;
-      console.error("Faild to delete ", postaxiosError);
+      console.error("Faild to delete ", axiosError);
       toast({
         title: "Faild to delete post",
         description: axiosError.message,

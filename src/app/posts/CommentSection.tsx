@@ -133,7 +133,7 @@ const CommentSection = ({
         />
       ) : (
         <form>
-          <div className="flex gap-2 w-full md:w-1/2 items-center my-2">
+          <div className="flex gap-2 w-full lg:w-1/2 items-center my-2">
             <input
               type="text"
               placeholder="Write a comment..."
@@ -155,8 +155,8 @@ const CommentSection = ({
           </div>
         </form>
       )}
-      <div className="md:flex justify-between">
-        <div className="md:w-3/4">
+      <div className="lg:flex justify-between">
+        <div className="lg:w-3/4">
           {status !== "loading" &&
             updatedComments?.map((comments: IResponseComment) => (
               <CommentCard
@@ -172,8 +172,10 @@ const CommentSection = ({
               />
             ))}
         </div>
-        <div className="md:w-1/3">
-          <h1 className="text-3xl font-medium">Explore more</h1>
+        <div className="lg:w-1/3">
+          <h1 className="text-3xl font-medium text-center lg:text-left">
+            Explore more
+          </h1>
           <div className="grid  md:grid-cols-1 gap-4">
             {status !== "loading" &&
               posts.map((post) => (

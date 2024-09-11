@@ -85,6 +85,7 @@ export const POST = async (req: NextRequest) => {
       {
         success: true,
         message: "Post published successfully",
+        data: post[0],
       },
       { status: 200 }
     );

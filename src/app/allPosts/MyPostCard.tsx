@@ -1,35 +1,38 @@
 "use client";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Edit3, Trash } from "lucide-react";
-import { useSession } from "next-auth/react";
-import { CustomSession, ICategories, IResponsePost } from "@/types/types";
+import Image from "next/image";
+import React from "react";
+
+import { CustomSession, IResponsePost } from "@/types/types";
 
 import dayjs from "dayjs";
+
 import Link from "next/link";
 import { usePosts } from "@/contexts/PostsContext";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
-const RecentPostCard = ({ post }: { post: IResponsePost }) => {
+const MyPostCard = ({ post }: { post: IResponsePost }) => {
   const { data, status } = useSession();
   const session = data as CustomSession;
   const { getSingleCategory, editPost, deletePost } = usePosts();
-  const category = getSingleCategory(post?.categorySlug);
+  const category = getSingleCategory(post.categorySlug);
   const router = useRouter();
 
   return (
-    <div className="lg:flex  justify-between lg:w-[98%] gap-4">
-      <div className="lg:w-1/2">
+    <div className="w-[450px] h-[600px] mx-auto lg:mx-0">
+      <div>
         <Image
           src={post?.imageUrl}
-          alt="image"
+          alt="post image"
           className="w-full rounded-lg"
-          height={1000}
           width={1000}
+          height={1000}
         />
       </div>
-      <div className="space-y-3 sm:space-y-2 lg:w-1/2 sm:px-4  text-center lg:text-left py-2">
-        <span className="text-red-500 text-lg px-1 font-bold">
+      <div className="space-y-1 py-2 text-center lg:text-left font-bold">
+        <span className="text-red-500 text-lg px-1 ">
           {category?.name?.toUpperCase()}
         </span>
         <div className="flex items-center gap-2 justify-center lg:justify-normal">
@@ -41,25 +44,22 @@ const RecentPostCard = ({ post }: { post: IResponsePost }) => {
             width={1000}
           />
           <div>
-            <p className="font-semibold text-black dark:text-white">
-              {post?.userId === session?.user.id ? "you" : post?.username}
-            </p>
+            <p className="font-semibold text-black dark:text-white">you</p>
             <p className="text-sm text-gray-700 dark:text-gray-400  ]">
-              {" "}
-              {dayjs(post?.createdAt).format("DD/MM/YYYY")}...
+              {dayjs(post?.createdAt).format("DD/MM/YYYY")}
             </p>
-            <span>{post.isEdited ? "edited" : ""}</span>
+            <span>{post?.isEdited ? "edited" : ""}</span>
           </div>
         </div>
-        <h1 className="text-2xl sm:text-3xl font-bold">{post?.title}</h1>
-        <p className="text-lg sm:text-xl">
+        <h1 className="text-2xl font-bold">{post?.title}</h1>
+        <p className="text-sm sm:text-lg ">
           <div
             dangerouslySetInnerHTML={{
               __html: post?.content.slice(0, 100) + "....",
             }}
           />
         </p>
-        <div className="lg:flex gap-4 items-center flex-wrap ">
+        <div className="lg:flex gap-4 items-center justify-center lg:justify-normal pt-1">
           <Button className="bg-sunset-orange text-lg sm:text-2xl font-semibold dark:text-white ">
             <Link href={"/posts/" + post?.slug}>Read more</Link>
           </Button>
@@ -90,4 +90,4 @@ const RecentPostCard = ({ post }: { post: IResponsePost }) => {
   );
 };
 
-export default RecentPostCard;
+export default MyPostCard;

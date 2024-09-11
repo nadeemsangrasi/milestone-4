@@ -19,7 +19,16 @@ const LogInPage = () => {
       console.error("Error logging with google", error);
     }
   };
-  const handleGithubLogin = () => {};
+  const handleGithubLogin = () => {
+    try {
+      signIn("github");
+      if (status === "authenticated") {
+        router.replace("/");
+      }
+    } catch (error) {
+      console.error("Error logging with google", error);
+    }
+  };
   return (
     <Wrapper>
       <div className="flex items-center justify-center pt-24">

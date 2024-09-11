@@ -1,35 +1,30 @@
 "use client";
-import Loader from "@/components/shared/Loader";
 import Wrapper from "@/components/shared/Wrapper";
-import { CustomSession, IResponsePost } from "@/types/types";
-
-import React from "react";
-import MyPostCard from "../allPosts/MyPostCard";
-import { useSession } from "next-auth/react";
+import MyPostCard from "./MyPostCard";
+import { IResponsePost } from "@/types/types";
 import { usePosts } from "@/contexts/PostsContext";
+import Loader from "@/components/shared/Loader";
 
-const MyPostsPage = () => {
-  const { data, status } = useSession();
-  const session = data as CustomSession;
-
+const MyPosts = () => {
   const { posts, isLoading, getSingleCategory } = usePosts();
+
   return (
     <Wrapper>
       <div className="py-16">
         <h1 className="text-4xl sm:text-5xl font-bold text-center  my-16">
-          Explore your posts
+          Experience All posts
         </h1>
         <div className="flex justify-between items-center gap-4 flex-wrap my-16">
-          {isLoading && (
+          {isLoading ? (
             <div className="text-center">
-              <Loader label="Loading your posts..." />
+              {posts.length === 0 ? (
+                <h1 className="mx-2 text-xl font-semibold">No posts found</h1>
+              ) : (
+                <Loader label="Loading posts..." />
+              )}
             </div>
-          )}
-          {posts.length === 0 && !isLoading ? (
-            <h1 className="mx-2 text-xl font-semibold">No posts found</h1>
           ) : (
             posts
-              .filter((post: IResponsePost) => post.userId === session?.user.id)
               .sort(
                 (a: IResponsePost, b: IResponsePost) =>
                   Number(b.id) - Number(a.id)
@@ -44,4 +39,4 @@ const MyPostsPage = () => {
   );
 };
 
-export default MyPostsPage;
+export default MyPosts;
