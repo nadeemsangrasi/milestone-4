@@ -1,30 +1,16 @@
 import Wrapper from "@/components/shared/Wrapper";
 import Post from "../Post";
-
-import axios, { AxiosError } from "axios";
 import Categories from "@/components/sections/categoriesSection/Categories";
 import { fetchCommentsFromDb } from "@/lib/fetchComments";
-
 import CommentSection from "../CommentSection";
 import { fetchPostsFromDb } from "@/lib/fetchPosts";
-const getSinglePost = async (slug: string) => {
-  try {
-    const res = await axios.get(
-      "http://localhost:3000/api/blog/post/single-post/" + slug,
-      {
-        headers: {
-          "Cache-Control": "no-store",
-        },
-      }
-    );
-    return res.data.data;
-  } catch (error) {
-    console.error("Error fetching categories");
-    const axiosError = error as AxiosError;
-    return axiosError;
-  }
-};
-const PostPage = async ({ params }: { params: { slug: string } }) => {
+import { getSinglePost } from "@/lib/getSinglePost";
+
+const PostPage = async ({
+  params,
+}: {
+  params: { slug: string };
+}): Promise<JSX.Element> => {
   const { slug } = params;
   const post = await getSinglePost(slug);
   const comments = await fetchCommentsFromDb(post.id);

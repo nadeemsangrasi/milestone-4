@@ -1,4 +1,4 @@
-export const slugify = (str: string) =>
+export const slugify = (str: string): string =>
   str
     .toLowerCase()
     .trim()

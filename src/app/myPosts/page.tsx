@@ -8,11 +8,11 @@ import MyPostCard from "../allPosts/MyPostCard";
 import { useSession } from "next-auth/react";
 import { usePosts } from "@/contexts/PostsContext";
 
-const MyPostsPage = () => {
-  const { data, status } = useSession();
+const MyPostsPage = (): JSX.Element => {
+  const { data } = useSession();
   const session = data as CustomSession;
 
-  const { posts, isLoading, getSingleCategory } = usePosts();
+  const { posts, isLoading } = usePosts()!;
   return (
     <Wrapper>
       <div className="py-16">

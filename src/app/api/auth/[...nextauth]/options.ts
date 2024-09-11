@@ -4,7 +4,14 @@ import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { db } from "@/lib/database";
 
 import { CustomSession, CustomToken } from "@/types/types";
+import { JWT } from "next-auth/jwt";
+import { AdapterUser } from "next-auth/adapters";
 
+declare module "next-auth/jwt" {
+  interface JWT {
+    id?: string;
+  }
+}
 export const authOptions = {
   providers: [
     GoogleProvider({
@@ -18,13 +25,25 @@ export const authOptions = {
   ],
   adapter: DrizzleAdapter(db),
   callbacks: {
-    async jwt({ token, user }): Promise<CustomToken> {
+    async jwt({
+      token,
+      user,
+    }: {
+      token: JWT;
+      user?: AdapterUser;
+    }): Promise<CustomToken> {
       if (user) {
         token.id = user.id?.toString();
       }
       return token;
     },
-    async session({ session, token }): Promise<CustomSession> {
+    async session({
+      session,
+      token,
+    }: {
+      session: CustomSession;
+      token: CustomToken;
+    }): Promise<CustomSession> {
       if (token) {
         session.user = {
           id: token.id,
@@ -40,7 +59,4 @@ export const authOptions = {
     strategy: "jwt",
   },
   secret: process.env.NEXTAUTH_SECRET,
-  httpOptions: {
-    timeout: 20000, // Increase the timeout to 10 seconds
-  },
 };

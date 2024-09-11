@@ -6,7 +6,7 @@ import homeImg3 from "@/assets/images/home-3.jpg";
 import homeImg4 from "@/assets/images/home-4.jpg";
 import React from "react";
 
-const HomeSection = () => {
+const HomeSection = (): JSX.Element => {
   return (
     <Wrapper>
       <div className="w-full mt-24 sm:mt-16">

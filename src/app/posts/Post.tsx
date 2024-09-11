@@ -1,23 +1,14 @@
 "use client";
 import React from "react";
-
 import Image from "next/image";
-import { useEffect, useState } from "react";
-
 import { useSession } from "next-auth/react";
 import { CustomSession, IResponsePost } from "@/types/types";
-import { useToast } from "@/hooks/use-toast";
-
 import dayjs from "dayjs";
 import { usePosts } from "@/contexts/PostsContext";
-const Post = ({ post }: { post: IResponsePost }) => {
-  const [Error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const { toast } = useToast();
-  const { data, status } = useSession();
-  const [comment, setComment] = useState("");
+const Post = ({ post }: { post: IResponsePost }): JSX.Element => {
+  const { data } = useSession();
   const session = data as CustomSession;
-  const { getSingleCategory } = usePosts();
+  const { getSingleCategory } = usePosts()!;
   const category = getSingleCategory(post?.categorySlug);
 
   return (
@@ -36,7 +27,7 @@ const Post = ({ post }: { post: IResponsePost }) => {
           {post?.title}
         </h1>
         <p className="text-sunset-orange text-center font-bold lg:text-start">
-          {category.name.toUpperCase()}
+          {category?.name.toUpperCase()}
         </p>
         <div className="flex items-center gap-2 justify-center lg:justify-normal">
           <Image

@@ -1,23 +1,20 @@
 "use client";
 import React from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar } from "@/components/ui/avatar";
 import Link from "next/link";
 import ThemeSwitch from "../shared/ThemeSwitch";
 import {
   Home,
   ListChecks,
-  LogIn,
   LogOut,
   SquarePen,
   UserRoundCheck,
 } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 
-const Navbar = () => {
+const Navbar = (): JSX.Element => {
   const { data: session, status } = useSession();
-  const router = useRouter();
   return (
     <header className="fixed left-1/2 -translate-x-1/2 w-full border-b-2 bg-white dark:bg-primary-bg">
       <div className="w-full px-4 sm:px-0   mx-auto flex justify-between items-center py-4 my-0 flex-wrap gap-4">

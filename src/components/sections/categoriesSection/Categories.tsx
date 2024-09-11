@@ -3,7 +3,7 @@ import Loader from "@/components/shared/Loader";
 
 import { Button } from "@/components/ui/button";
 import { usePosts } from "@/contexts/PostsContext";
-import { ICategories } from "@/types/types";
+import { ICategories, IPostContext } from "@/types/types";
 import { useRouter } from "next/navigation";
 
 import React, { useEffect, useState } from "react";
@@ -15,9 +15,9 @@ const colors = [
   "bg-purple-500 dark:bg-purple-700",
   "bg-red-500 dark:bg-red-700",
 ];
-const Categories = () => {
-  const { categories, isLoadingCategories } = usePosts();
-  const [category, setCategory] = useState([]);
+const Categories = (): JSX.Element => {
+  const { categories, isLoadingCategories } = usePosts() as IPostContext;
+  const [category, setCategory] = useState<ICategories[]>([]);
   const router = useRouter();
   useEffect(() => {
     setCategory(

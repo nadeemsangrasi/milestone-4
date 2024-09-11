@@ -1,14 +1,17 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { CustomSession, IResponseComment, IResponsePost } from "@/types/types";
+import {
+  CustomSession,
+  IResponseComment,
+  IResponsePost,
+  IUser,
+} from "@/types/types";
 import { Link, Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import React, { useState, FormEventHandler, use, useEffect } from "react";
 import axios, { AxiosError } from "axios";
 import { useToast } from "@/hooks/use-toast";
-import Categories from "@/components/sections/categoriesSection/Categories";
 import CommentCard from "./CommentCard";
-import { postsTable } from "@/lib/database";
 import ExploreMoreCard from "./ExploreMoreCard";
 
 const CommentSection = ({
@@ -19,7 +22,7 @@ const CommentSection = ({
   post: IResponsePost;
   comments: IResponseComment[];
   posts: IResponsePost[];
-}) => {
+}): JSX.Element => {
   const { data, status } = useSession();
   const session = data as CustomSession;
   const [comment, setComment] = useState({
@@ -75,9 +78,9 @@ const CommentSection = ({
 
   useEffect(() => {
     setUpdatedComments(comments);
-  }, []);
+  }, [comments]);
 
-  const handleEdit = async (e) => {
+  const handleEdit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       setUpdatedComments(
@@ -132,7 +135,7 @@ const CommentSection = ({
           className="mx-4 my-4"
         />
       ) : (
-        <form>
+        <form onSubmit={isEditingComment ? handleEdit : handleSubmitComment}>
           <div className="flex gap-2 w-full lg:w-1/2 items-center my-2">
             <input
               type="text"
@@ -148,7 +151,6 @@ const CommentSection = ({
               className=" text-xl  font-bold"
               type="submit"
               disabled={isSubmiting || comment.content === ""}
-              onClick={isEditingComment ? handleEdit : handleSubmitComment}
             >
               {isSubmiting ? "sending..." : "sand"}
             </Button>
@@ -162,7 +164,7 @@ const CommentSection = ({
               <CommentCard
                 key={comments?.id}
                 comment={comments}
-                user={session?.user}
+                user={session?.user as IUser}
                 setContent={setComment}
                 content={comment}
                 updatedComments={updatedComments}

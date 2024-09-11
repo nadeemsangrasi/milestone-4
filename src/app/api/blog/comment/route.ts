@@ -4,7 +4,6 @@ import { commentsTable, db } from "@/lib/database";
 import { and, eq } from "drizzle-orm";
 import { authOptions } from "../../auth/[...nextauth]/options";
 import { CustomSession } from "@/types/types";
-import { revalidatePath } from "next/cache";
 
 export const GET = async (req: NextRequest) => {
   const postId = new URL(req.nextUrl).searchParams.get("postId");
@@ -104,7 +103,7 @@ export const PATCH = async (req: NextRequest) => {
   const session = (await getServerSession({
     req,
     ...authOptions,
-  })) as any as CustomSession;
+  } as any)) as any as CustomSession;
   if (!session || !session.user) {
     console.error("user not authenticated");
     return NextResponse.json(

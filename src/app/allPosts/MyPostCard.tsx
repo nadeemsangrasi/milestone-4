@@ -3,22 +3,20 @@ import { Button } from "@/components/ui/button";
 import { Edit3, Trash } from "lucide-react";
 import Image from "next/image";
 import React from "react";
-
 import { CustomSession, IResponsePost } from "@/types/types";
-
 import dayjs from "dayjs";
-
 import Link from "next/link";
 import { usePosts } from "@/contexts/PostsContext";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
-const MyPostCard = ({ post }: { post: IResponsePost }) => {
+const MyPostCard = ({ post }: { post: IResponsePost }): JSX.Element => {
   const { data, status } = useSession();
   const session = data as CustomSession;
-  const { getSingleCategory, editPost, deletePost } = usePosts();
+  const { getSingleCategory, editPost, deletePost } = usePosts()!;
   const category = getSingleCategory(post.categorySlug);
-  const router = useRouter();
+  const router: AppRouterInstance = useRouter();
 
   return (
     <div className="w-[450px] h-[600px] mx-auto lg:mx-0">

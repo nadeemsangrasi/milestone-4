@@ -3,17 +3,18 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Edit3, Trash } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { CustomSession, ICategories, IResponsePost } from "@/types/types";
+import { CustomSession, IPostContext, IResponsePost } from "@/types/types";
 
 import dayjs from "dayjs";
 import Link from "next/link";
 import { usePosts } from "@/contexts/PostsContext";
 import { useRouter } from "next/navigation";
 
-const RecentPostCard = ({ post }: { post: IResponsePost }) => {
+const RecentPostCard = ({ post }: { post: IResponsePost }): JSX.Element => {
   const { data, status } = useSession();
   const session = data as CustomSession;
-  const { getSingleCategory, editPost, deletePost } = usePosts();
+  const { getSingleCategory, editPost, deletePost } =
+    usePosts() as IPostContext;
   const category = getSingleCategory(post?.categorySlug);
   const router = useRouter();
 

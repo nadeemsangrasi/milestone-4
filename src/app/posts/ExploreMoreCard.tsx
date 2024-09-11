@@ -1,19 +1,19 @@
 "use client";
 
 import { usePosts } from "@/contexts/PostsContext";
-import { ICategories, IResponsePost } from "@/types/types";
+import { IResponsePost, IUser } from "@/types/types";
 import dayjs from "dayjs";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 const ExploreMoreCard = ({
   post,
   user,
 }: {
   post: IResponsePost;
-  user: any;
-}) => {
-  const { getSingleCategory } = usePosts();
+  user: IUser;
+}): JSX.Element => {
+  const { getSingleCategory } = usePosts()!;
   const category = getSingleCategory(post.categorySlug);
 
   return (
@@ -35,7 +35,7 @@ const ExploreMoreCard = ({
               {dayjs(post.createdAt).format("DD/MM/YYYY")}
             </p>
             <span className="text-red-500 text-sm font-bold">
-              {category.name.toUpperCase()}
+              {category?.name.toUpperCase()}
             </span>
           </div>
         </div>

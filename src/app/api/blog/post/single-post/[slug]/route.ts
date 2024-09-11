@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { db, postsTable } from "@/lib/database";
-import { and, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 
 export const GET = async (
   req: NextRequest,

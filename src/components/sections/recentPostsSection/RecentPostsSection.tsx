@@ -3,13 +3,13 @@
 import Wrapper from "@/components/shared/Wrapper";
 import RecentPostCard from "./RecentPostCard";
 import { usePosts } from "@/contexts/PostsContext";
-import { IResponsePost } from "@/types/types";
+import { IPostContext, IResponsePost } from "@/types/types";
 import Loader from "@/components/shared/Loader";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
-const RecentPostsSection = () => {
-  const { posts, isLoading } = usePosts();
+const RecentPostsSection = (): JSX.Element => {
+  const { posts, isLoading } = usePosts() as IPostContext;
   const router = useRouter();
 
   return (

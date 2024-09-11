@@ -6,7 +6,7 @@ import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-const LogInPage = () => {
+const LogInPage = (): JSX.Element => {
   const { status } = useSession();
   const router = useRouter();
   const hanldeGoogleLogin = () => {

@@ -1,6 +1,6 @@
 import Wrapper from "@/components/shared/Wrapper";
 import Categories from "./Categories";
-const CategoriesSection = () => {
+const CategoriesSection = (): JSX.Element => {
   return (
     <Wrapper>
       <div>

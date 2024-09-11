@@ -1,7 +1,7 @@
 import { Loader2 } from "lucide-react";
 import React from "react";
 
-const Loader = ({ label }: { label: string }) => {
+const Loader = ({ label }: { label: string }): JSX.Element => {
   return (
     <div className="flex items-center gap-2 mt-8">
       <h1>

@@ -1,3 +1,5 @@
+import { Dispatch } from "react";
+
 export interface CustomSession extends Session {
   user: {
     id?: string;
@@ -74,3 +76,17 @@ export interface IPostContext {
   editPost: (post: IResponsePost) => void;
   deletePost: (post: IResponsePost) => void;
 }
+
+export interface IUser{ id: string; name: string; email: string; image: string }
+export interface ICommentCard{
+  comment: IResponseComment;
+  user: IUser;
+  updatedComments:IResponseComment[] ;
+  setUpdatedComments: Dispatch<SetStateAction<IResponseComment[]>> ;
+  setContent: Dispatch<SetStateAction<string>> ;
+  content: {id: string;
+    content: string;};
+  isEditing: boolean;
+  setIsEdditing: Dispatch<SetStateAction<boolean>>;
+}
+} 

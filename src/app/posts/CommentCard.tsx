@@ -1,8 +1,7 @@
 import Image from "next/image";
-import React from "react";
-import img from "@/assets/images/home-3.jpg";
-import { Edit, Edit2, Edit2Icon, Edit3, Trash } from "lucide-react";
-import { IResponseComment } from "@/types/types";
+import React, { Dispatch, SetStateAction } from "react";
+import { Edit3, Trash } from "lucide-react";
+import { ICommentCard, IResponseComment } from "@/types/types";
 import dayjs from "dayjs";
 import axios, { AxiosError } from "axios";
 import { useToast } from "@/hooks/use-toast";
@@ -15,16 +14,7 @@ const CommentCard = ({
   content,
   setIsEdditing,
   isEditing,
-}: {
-  comment: IResponseComment;
-  user: { id: string; name: string; email: string; image: string };
-  updatedComments: any;
-  setUpdatedComments: any;
-  setContent: any;
-  content: any;
-  isEditing: boolean;
-  setIsEdditing: any;
-}) => {
+}: ICommentCard): JSX.Element => {
   const { toast } = useToast();
   const handleEditComment = async () => {
     setIsEdditing(!isEditing);

@@ -19,7 +19,7 @@ const PostsContext = ({ children }: { children: React.ReactNode }) => {
     useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isEditingPost, setIsEditingPost] = useState<boolean>(false);
-  const { data, status } = useSession();
+  const { data } = useSession();
   const session = data as CustomSession;
   const getSingleCategory = (slug: string) => {
     if (slug && categories.length > 0) {

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Loader from "@/components/shared/Loader";
 import SelectCategory from "@/components/shared/SelectCategory";
 import Wrapper from "@/components/shared/Wrapper";
 import { Button } from "@/components/ui/button";
@@ -14,13 +13,13 @@ import { Loader2, Upload } from "lucide-react";
 import { useSession } from "next-auth/react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.bubble.css";
-import { ICategories, IResponsePost, IPostContext } from "@/types/types";
-import { useParams, useRouter } from "next/navigation";
+import { IResponsePost, IPostContext } from "@/types/types";
+import { useRouter } from "next/navigation";
 const WritePost = ({
   searchParams,
 }: {
   searchParams: { postSlug: string };
-}) => {
+}): JSX.Element => {
   const [formData, setFormData] = useState<IUploadPost>({
     title: "",
     imageUrl: "",
@@ -102,7 +101,7 @@ const WritePost = ({
     };
 
     uploadPost();
-  }, [file]);
+  }, [file, toast]);
 
   const handlePublishPost = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -148,7 +147,7 @@ const WritePost = ({
       });
     }
   };
-  const handleUpdatePost = async (e) => {
+  const handleUpdatePost = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
@@ -171,10 +170,12 @@ const WritePost = ({
         });
       } else {
         setIsPublishing(false);
-        setPosts((prevPosts) => {
+        setPosts((prevPosts: IResponsePost[]) => {
           const updatedPosts = [
             res.data.data,
-            ...prevPosts.filter((myPost) => myPost.id !== singlePost?.id),
+            ...prevPosts.filter(
+              (myPost: IResponsePost) => myPost.id !== singlePost?.id
+            ),
           ];
           return updatedPosts;
         });
@@ -205,7 +206,7 @@ const WritePost = ({
           {isEditingPost ? "Edit Post" : "Write your experience"}
         </h1>
         <div className="my-8">
-          <form>
+          <form onSubmit={isEditingPost ? handleUpdatePost : handlePublishPost}>
             <div>
               <input
                 value={formData.title}
@@ -277,7 +278,7 @@ const WritePost = ({
                   ? false
                   : true
               }
-              onClick={isEditingPost ? handleUpdatePost : handlePublishPost}
+              type="submit"
             >
               {isEditingPost ? (
                 <>{isPublishing ? "saving..." : "save changes"}</>

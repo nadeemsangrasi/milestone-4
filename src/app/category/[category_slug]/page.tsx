@@ -6,10 +6,14 @@ import { usePosts } from "@/contexts/PostsContext";
 
 import { IResponsePost } from "@/types/types";
 
-const CategoryPage = ({ params }: { params: { category_slug: string } }) => {
+const CategoryPage = ({
+  params,
+}: {
+  params: { category_slug: string };
+}): JSX.Element => {
   const { category_slug } = params;
 
-  const { posts, isLoading, getSingleCategory } = usePosts();
+  const { posts, isLoading, getSingleCategory } = usePosts()!;
   const category = getSingleCategory(category_slug)?.name;
 
   return (

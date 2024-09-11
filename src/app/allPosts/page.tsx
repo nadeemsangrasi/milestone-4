@@ -5,8 +5,8 @@ import { IResponsePost } from "@/types/types";
 import { usePosts } from "@/contexts/PostsContext";
 import Loader from "@/components/shared/Loader";
 
-const MyPosts = () => {
-  const { posts, isLoading, getSingleCategory } = usePosts();
+const MyPosts = (): JSX.Element => {
+  const { posts, isLoading } = usePosts()!;
 
   return (
     <Wrapper>
