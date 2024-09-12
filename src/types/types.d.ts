@@ -1,4 +1,6 @@
-import { Dispatch } from "react";
+import { Dispatch, SetStateAction } from "react";
+import { Session } from "next-auth";
+import { JWT } from "next-auth/jwt";
 
 export interface CustomSession extends Session {
   user: {
@@ -77,16 +79,19 @@ export interface IPostContext {
   deletePost: (post: IResponsePost) => void;
 }
 
-export interface IUser{ id: string; name: string; email: string; image: string }
-export interface ICommentCard{
+export interface IUser {
+  id: string;
+  name: string;
+  email: string;
+  image: string;
+}
+export interface ICommentCard {
   comment: IResponseComment;
   user: IUser;
-  updatedComments:IResponseComment[] ;
-  setUpdatedComments: Dispatch<SetStateAction<IResponseComment[]>> ;
-  setContent: Dispatch<SetStateAction<string>> ;
-  content: {id: string;
-    content: string;};
+  updatedComments: IResponseComment[];
+  setUpdatedComments: Dispatch<SetStateAction<IResponseComment[]>>;
+  setContent: Dispatch<SetStateAction<{ id: string; content: string }>>;
+  content: { id: string; content: string };
   isEditing: boolean;
   setIsEdditing: Dispatch<SetStateAction<boolean>>;
 }
-} 

@@ -22,7 +22,7 @@ const RecentPostsSection = (): JSX.Element => {
       </h1>
       <div className="space-y-8">
         {posts.length === 0 && status !== "loading" && !isLoading && (
-          <h2 className="text-center">No posts found</h2>
+          <h2 className="text-center my-8">No posts found</h2>
         )}
         {isLoading && <Loader label="Loading posts..." />}
 
