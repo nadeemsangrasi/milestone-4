@@ -3,7 +3,7 @@ import React from "react";
 
 const Loader = ({ label }: { label: string }): JSX.Element => {
   return (
-    <div className="flex items-center gap-2 mt-8">
+    <div className="flex items-center gap-2 my-8 mx-auto">
       <h1>
         <Loader2 size={32} strokeWidth={3} absoluteStrokeWidth />
       </h1>

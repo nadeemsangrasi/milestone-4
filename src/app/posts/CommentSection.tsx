@@ -6,15 +6,16 @@ import {
   IResponsePost,
   IUser,
 } from "@/types/types";
-import { Link, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import React, { useState, FormEventHandler, use, useEffect } from "react";
 import axios, { AxiosError } from "axios";
 import { useToast } from "@/hooks/use-toast";
 import CommentCard from "./CommentCard";
 import ExploreMoreCard from "./ExploreMoreCard";
-import Loader from "@/components/shared/Loader";
 import { fetchCommentsFromDb } from "@/lib/fetchComments";
+import Link from "next/link";
+import Loader from "@/components/shared/Loader";
 
 const CommentSection = ({
   post,
@@ -36,6 +37,7 @@ const CommentSection = ({
   );
   const [isSubmiting, setIsSubmiting] = useState(false);
   const [editing, setEditing] = useState(false);
+  const [loadingComments, setLoadingComments] = useState(false);
 
   const [isEditingComment, setIsEditingComment] = useState(false);
   const { toast } = useToast();
@@ -82,11 +84,13 @@ const CommentSection = ({
 
   useEffect(() => {
     const setCommentsData = async () => {
+      setLoadingComments(true);
       const comments: {
         data: IResponseComment[];
         success: boolean;
         message?: string;
       } = await fetchCommentsFromDb(post.id);
+      setLoadingComments(false);
       if (comments.data?.length == 0) return;
       if (!comments.success) {
         toast({
@@ -146,8 +150,8 @@ const CommentSection = ({
       </h1>
       {status === "unauthenticated" ? (
         <Link
-          href={"/login"}
-          className="sm:text-xl text-2xl font-medium border-b-2 border-white inline-block my-2"
+          href={"/sign-in"}
+          className="sm:text-xl text-2xl font-medium border-b-2 border-white inline-block my-2 "
         >
           log in to write comment
         </Link>
@@ -187,7 +191,10 @@ const CommentSection = ({
       )}
       <div className="lg:flex justify-between">
         <div className="lg:w-3/4">
-          {updatedComments.length === 0 && <h2>No comments</h2>}
+          {updatedComments.length === 0 &&
+            status !== "loading" &&
+            !loadingComments && <h2>No comments</h2>}
+          {loadingComments && <Loader label="Loading comments..." />}
           {status !== "loading" &&
             updatedComments?.map((comments: IResponseComment) => (
               <CommentCard
@@ -217,18 +224,13 @@ const CommentSection = ({
               />
             )}
             {status !== "loading" &&
-              posts
-                .sort(
-                  (a: IResponsePost, b: IResponsePost) =>
-                    Number(b.id) - Number(a.id)
-                )
-                .map((post) => (
-                  <ExploreMoreCard
-                    key={post.id}
-                    post={post}
-                    user={session?.user as IUser}
-                  />
-                ))}
+              posts.map((post) => (
+                <ExploreMoreCard
+                  key={post.id}
+                  post={post}
+                  user={session?.user as IUser}
+                />
+              ))}
           </div>
         </div>
       </div>

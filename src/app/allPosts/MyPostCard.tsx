@@ -42,7 +42,9 @@ const MyPostCard = ({ post }: { post: IResponsePost }): JSX.Element => {
             width={1000}
           />
           <div>
-            <p className="font-semibold text-black dark:text-white">you</p>
+            <p className="font-semibold text-black dark:text-white">
+              {post?.userId === session?.user.id ? "you" : post?.username}
+            </p>
             <p className="text-sm text-gray-700 dark:text-gray-400  ]">
               {dayjs(post?.createdAt).format("DD/MM/YYYY")}
             </p>

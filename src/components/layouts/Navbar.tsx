@@ -87,16 +87,14 @@ const Navbar = (): JSX.Element => {
             </li>
             {status === "authenticated" ? (
               <li>
-                <Link href={"#"}>
-                  {" "}
-                  <LogOut
-                    size={30}
-                    strokeWidth={3}
-                    absoluteStrokeWidth
-                    onClick={() => signOut()}
-                    className="cursor-pointer"
-                  />
-                </Link>
+                {" "}
+                <LogOut
+                  size={30}
+                  strokeWidth={3}
+                  absoluteStrokeWidth
+                  onClick={() => signOut()}
+                  className="cursor-pointer"
+                />
               </li>
             ) : (
               ""
