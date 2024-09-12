@@ -6,7 +6,7 @@ export async function middleware(request: NextRequest) {
   const pathName = request.nextUrl.pathname;
 
   if (token) {
-    return NextResponse;
+    return NextResponse.next();
   }
   if (
     (!token && pathName.startsWith("/myPosts")) ||
@@ -15,16 +15,17 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/sign-in", request.url));
   }
 
-  return NextResponse;
+  return NextResponse.next();
 }
 
 export const config = {
   matcher: [
-    "/myPosts",
+    "/myPosts/",
     "/write",
+    "/",
+    "/allPosts",
+    "/category/:path*",
     "/posts/:path*",
-    "allPosts",
     "/sign-in",
-    "category/:path*",
   ],
 };

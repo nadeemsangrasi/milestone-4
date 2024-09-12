@@ -49,7 +49,9 @@ const RecentPostCard = ({ post }: { post: IResponsePost }): JSX.Element => {
               {" "}
               {dayjs(post?.createdAt).format("DD/MM/YYYY")}...
             </p>
-            <span>{post.isEdited ? "edited" : ""}</span>
+            <span className="text-black dark:text-white ">
+              {post.isEdited ? "edited" : ""}
+            </span>
           </div>
         </div>
         <h1 className="text-2xl sm:text-3xl font-bold">{post?.title}</h1>
@@ -61,7 +63,7 @@ const RecentPostCard = ({ post }: { post: IResponsePost }): JSX.Element => {
           />
         </p>
         <div className="lg:flex gap-4 items-center flex-wrap ">
-          <Button className="bg-sunset-orange text-lg sm:text-2xl font-semibold dark:text-white ">
+          <Button className="bg-sunset-orange text-lg sm:text-2xl font-semibold dark:text-white hover:bg-orange-400">
             <Link href={"/posts/" + post?.slug}>Read more</Link>
           </Button>
           {status === "authenticated" && session.user.id === post?.userId && (

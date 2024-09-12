@@ -13,14 +13,16 @@ import axios, { AxiosError } from "axios";
 import { useToast } from "@/hooks/use-toast";
 import CommentCard from "./CommentCard";
 import ExploreMoreCard from "./ExploreMoreCard";
+import Loader from "@/components/shared/Loader";
+import { fetchCommentsFromDb } from "@/lib/fetchComments";
 
 const CommentSection = ({
   post,
-  comments,
+
   posts,
 }: {
   post: IResponsePost;
-  comments: IResponseComment[];
+
   posts: IResponsePost[];
 }): JSX.Element => {
   const { data, status } = useSession();
@@ -33,6 +35,8 @@ const CommentSection = ({
     []
   );
   const [isSubmiting, setIsSubmiting] = useState(false);
+  const [editing, setEditing] = useState(false);
+
   const [isEditingComment, setIsEditingComment] = useState(false);
   const { toast } = useToast();
   const handleSubmitComment: FormEventHandler<HTMLFormElement> = async (e) => {
@@ -77,11 +81,28 @@ const CommentSection = ({
   };
 
   useEffect(() => {
-    setUpdatedComments(comments);
-  }, [comments]);
+    const setCommentsData = async () => {
+      const comments: {
+        data: IResponseComment[];
+        success: boolean;
+        message?: string;
+      } = await fetchCommentsFromDb(post.id);
+      if (comments.data?.length == 0) return;
+      if (!comments.success) {
+        toast({
+          title: "Failed to fetch comments",
+          description: comments.message,
+          variant: "destructive",
+        });
+      }
+      setUpdatedComments(comments.data);
+    };
+    setCommentsData();
+  }, [post.id, toast]);
 
   const handleEdit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setEditing(true);
     try {
       setUpdatedComments(
         updatedComments.filter((myComment: any) => myComment.id !== comment.id)
@@ -104,6 +125,7 @@ const CommentSection = ({
           description: res.data.message,
         });
         setIsEditingComment(!isEditingComment);
+        setComment({ id: "", content: "" });
       }
     } catch (error) {
       const axiosError = error as AxiosError;
@@ -113,6 +135,8 @@ const CommentSection = ({
         description: axiosError.message,
         variant: "destructive",
       });
+    } finally {
+      setEditing(false);
     }
   };
   return (
@@ -152,13 +176,18 @@ const CommentSection = ({
               type="submit"
               disabled={isSubmiting || comment.content === ""}
             >
-              {isSubmiting ? "sending..." : "sand"}
+              {isEditingComment ? (
+                <>{editing ? "saving..." : "save changes"}</>
+              ) : (
+                <>{isSubmiting ? "sending..." : "sand"}</>
+              )}
             </Button>
           </div>
         </form>
       )}
       <div className="lg:flex justify-between">
         <div className="lg:w-3/4">
+          {updatedComments.length === 0 && <h2>No comments</h2>}
           {status !== "loading" &&
             updatedComments?.map((comments: IResponseComment) => (
               <CommentCard
@@ -179,14 +208,27 @@ const CommentSection = ({
             Explore more
           </h1>
           <div className="grid  md:grid-cols-1 gap-4">
+            {status === "loading" && (
+              <Loader2
+                size={32}
+                strokeWidth={3}
+                absoluteStrokeWidth
+                className="mx-4 my-4"
+              />
+            )}
             {status !== "loading" &&
-              posts.map((post) => (
-                <ExploreMoreCard
-                  key={post.id}
-                  post={post}
-                  user={session?.user}
-                />
-              ))}
+              posts
+                .sort(
+                  (a: IResponsePost, b: IResponsePost) =>
+                    Number(b.id) - Number(a.id)
+                )
+                .map((post) => (
+                  <ExploreMoreCard
+                    key={post.id}
+                    post={post}
+                    user={session?.user as IUser}
+                  />
+                ))}
           </div>
         </div>
       </div>

@@ -21,7 +21,9 @@ const RecentPostsSection = (): JSX.Element => {
         {isLoading ? (
           <div className="text-center">
             {posts.length === 0 ? (
-              <h1 className="mx-2 text-xl font-semibold">No posts found</h1>
+              <h1 className="mx-2 text-xl font-semibold my-8">
+                No posts found
+              </h1>
             ) : (
               <Loader label="Loading posts..." />
             )}
@@ -38,12 +40,15 @@ const RecentPostsSection = (): JSX.Element => {
             ))
         )}
       </div>
-      <Button
-        className="font-bold text-xl sm:text-2xl my-6 mx-auto flex  "
-        onClick={() => router.push("/allPosts")}
-      >
-        See all posts
-      </Button>
+
+      {!isLoading && posts.length !== 0 && (
+        <Button
+          className="font-bold text-xl sm:text-2xl my-8 mx-auto flex  "
+          onClick={() => router.push("/allPosts")}
+        >
+          See all posts
+        </Button>
+      )}
     </Wrapper>
   );
 };

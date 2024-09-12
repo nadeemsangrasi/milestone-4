@@ -46,7 +46,9 @@ const MyPostCard = ({ post }: { post: IResponsePost }): JSX.Element => {
             <p className="text-sm text-gray-700 dark:text-gray-400  ]">
               {dayjs(post?.createdAt).format("DD/MM/YYYY")}
             </p>
-            <span>{post?.isEdited ? "edited" : ""}</span>
+            <span className="text-black dark:text-white">
+              {post?.isEdited ? "edited" : ""}
+            </span>
           </div>
         </div>
         <h1 className="text-2xl font-bold">{post?.title}</h1>
@@ -58,7 +60,7 @@ const MyPostCard = ({ post }: { post: IResponsePost }): JSX.Element => {
           />
         </p>
         <div className="lg:flex gap-4 items-center justify-center lg:justify-normal pt-1">
-          <Button className="bg-sunset-orange text-lg sm:text-2xl font-semibold dark:text-white ">
+          <Button className="bg-sunset-orange text-lg sm:text-2xl font-semibold dark:text-white hover:bg-orange-400">
             <Link href={"/posts/" + post?.slug}>Read more</Link>
           </Button>
           {status === "authenticated" && session.user.id === post?.userId && (

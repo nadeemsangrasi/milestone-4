@@ -45,7 +45,9 @@ const Post = ({ post }: { post: IResponsePost }): JSX.Element => {
             <p className="text-sm text-gray-700 dark:text-gray-400  ]">
               {dayjs(post?.createdAt).format("DD/MM/YYYY")}
             </p>
-            <span>{post.isEdited ? "edited" : ""}</span>
+            <span className="text-black dark:text-white">
+              {post.isEdited ? "edited" : ""}
+            </span>
           </div>
         </div>
         <p className="text-xl">

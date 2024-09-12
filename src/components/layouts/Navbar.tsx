@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { Button } from "../ui/button";
+import { AvatarImage } from "@radix-ui/react-avatar";
 
 const Navbar = (): JSX.Element => {
   const { data: session, status } = useSession();

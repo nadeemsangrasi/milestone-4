@@ -5,7 +5,7 @@ import { IResponsePost } from "@/types/types";
 import { usePosts } from "@/contexts/PostsContext";
 import Loader from "@/components/shared/Loader";
 
-const MyPosts = (): JSX.Element => {
+const AllPosts = (): JSX.Element => {
   const { posts, isLoading } = usePosts()!;
 
   return (
@@ -39,4 +39,4 @@ const MyPosts = (): JSX.Element => {
   );
 };
 
-export default MyPosts;
+export default AllPosts;

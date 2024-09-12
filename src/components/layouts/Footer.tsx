@@ -1,6 +1,6 @@
 const Footer = (): JSX.Element => {
   return (
-    <div className="w-full bg-black  text-white flex justify-around absolute ">
+    <div className="w-full bg-black  text-white flex justify-around fixed bottom-0">
       <div className="flex gap-0 md:gap-4 flex-wrap">
         <h1 className="text-2xl font-bold py-2">Developed by</h1>
         <div className="flex flex-wrap">

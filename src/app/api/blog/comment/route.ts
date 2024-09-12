@@ -21,10 +21,6 @@ export const GET = async (req: NextRequest) => {
       .where(eq(commentsTable.postId, Number(postId)));
     if (comments.length === 0) {
       console.error("no comments found");
-      return NextResponse.json(
-        { success: false, message: "no comments found" },
-        { status: 404 }
-      );
     }
 
     return NextResponse.json(

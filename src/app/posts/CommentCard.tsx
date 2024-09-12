@@ -71,7 +71,9 @@ const CommentCard = ({
           <p className="text-sm text-gray-700 dark:text-gray-400  ]">
             {dayjs(comment.createdAt).format("DD/MM/YYY")}
           </p>
-          <span>{comment.isEdited && "Edited"}</span>
+          <span className="text-black dark:text-white">
+            {comment.isEdited && "edited"}
+          </span>
         </div>
       </div>
       <p className="mt-1 text-[15px] leading-1 text-black dark:text-white">
@@ -83,14 +85,14 @@ const CommentCard = ({
             size={20}
             strokeWidth={2}
             absoluteStrokeWidth
-            className="cursor-pointer"
+            className="cursor-pointer text-black dark:text-white"
             onClick={handleEditComment}
           />
           <Trash
             size={20}
             strokeWidth={2}
             absoluteStrokeWidth
-            className="cursor-pointer"
+            className="cursor-pointer text-black dark:text-white"
             onClick={handleDeleteComment}
           />
         </div>

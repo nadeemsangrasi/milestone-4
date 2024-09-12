@@ -25,12 +25,13 @@ export default function RootLayout({
         <ThemeContext>
           <PostsContext>
             <body
-              className={`${raleway.className} bg-white dark:bg-primary-bg`}
+              className={`${raleway.className} bg-white dark:bg-primary-bg `}
               suppressHydrationWarning
             >
               <Navbar />
               {children}
               <Footer />
+
               <Toaster />
             </body>
           </PostsContext>
