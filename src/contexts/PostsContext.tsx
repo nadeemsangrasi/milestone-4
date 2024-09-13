@@ -35,7 +35,7 @@ const PostsContext = ({ children }: { children: React.ReactNode }) => {
     const fetchPosts = async () => {
       setIsLoading(true);
       try {
-        const res = await axios.get("http://localhost:3000/api/blog/post");
+        const res = await axios.get("/api/blog/post");
 
         if (!res.data.success) {
           toast({
@@ -61,7 +61,7 @@ const PostsContext = ({ children }: { children: React.ReactNode }) => {
     const fetchCategories = async () => {
       setIsLoadingCategories(true);
       try {
-        const res = await axios.get("http://localhost:3000/api/blog/category");
+        const res = await axios.get("/api/blog/category");
 
         if (!res.data.success) {
           toast({
@@ -85,7 +85,7 @@ const PostsContext = ({ children }: { children: React.ReactNode }) => {
       }
     };
     fetchCategories();
-  }, []);
+  }, [toast]);
 
   const editPost = (post: IResponsePost) => {
     setIsEditingPost(!isEditingPost);

@@ -3,7 +3,7 @@ import axios, { AxiosError } from "axios";
 export const fetchCommentsFromDb = async (postId: string) => {
   try {
     const res = await axios.get(
-      "http://localhost:3000/api/blog/comment?postId=" + postId
+      "https://milestone-4.vercel.app/api/blog/comment?postId=" + postId
     );
 
     return res.data;

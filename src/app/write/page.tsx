@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
 import SelectCategory from "@/components/shared/SelectCategory";
 import Wrapper from "@/components/shared/Wrapper";
@@ -11,10 +10,13 @@ import { slugify } from "@/utils/slugify";
 import axios, { AxiosError } from "axios";
 import { Loader2, Upload } from "lucide-react";
 import { useSession } from "next-auth/react";
-import ReactQuill from "react-quill";
+import dynamic from "next/dynamic";
 import "react-quill/dist/quill.bubble.css";
 import { IResponsePost, IPostContext } from "@/types/types";
 import { useRouter } from "next/navigation";
+const ReactQuill = dynamic(() => import("react-quill"), {
+  ssr: false,
+});
 const WritePost = ({
   searchParams,
 }: {

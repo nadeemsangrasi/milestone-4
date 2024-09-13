@@ -3,7 +3,6 @@ import MyPostCard from "@/app/allPosts/MyPostCard";
 import Loader from "@/components/shared/Loader";
 import Wrapper from "@/components/shared/Wrapper";
 import { usePosts } from "@/contexts/PostsContext";
-
 import { IResponsePost } from "@/types/types";
 
 const CategoryPage = ({
