@@ -4,7 +4,7 @@ import Loader from "@/components/shared/Loader";
 import Wrapper from "@/components/shared/Wrapper";
 import { usePosts } from "@/contexts/PostsContext";
 import { IResponsePost } from "@/types/types";
-
+import axios from "axios";
 const CategoryPage = ({
   params,
 }: {
