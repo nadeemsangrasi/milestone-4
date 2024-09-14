@@ -5,9 +5,11 @@ import { eq } from "drizzle-orm";
 
 export const GET = async (
   req: NextRequest,
+  res:NextResponse,
   context: { params: { slug: string } }
 ) => {
   const { slug } = context.params;
+  res.setHeader("Cache-Control", "no-store");
 
   try {
     if (!slug) {
