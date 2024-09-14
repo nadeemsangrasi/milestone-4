@@ -16,7 +16,7 @@ export const getSinglePost = async (slug: string) => {
     }
 
     const data = await res.json();
-    return data.data;
+    return data;
   } catch (error) {
     console.error("Error fetching single post:", error);
     return null;
