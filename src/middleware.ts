@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
-  const token = request.cookies.get("next-auth.session-token");
+  const token = request.cookies.get("__Secure-next-auth.session-token");
   const pathName = request.nextUrl.pathname;
 
   if (token) {
