@@ -8,17 +8,14 @@ export const GET = async (
 ) => {
   const { slug } = params;
 
-  // Set Cache-Control header to prevent caching
-  const headers = {
-    "Cache-Control": "no-store",
-  };
-
+  
+ 
   try {
     if (!slug) {
       console.error("All fields are required");
       return NextResponse.json(
         { success: false, message: "All fields are required" },
-        { status: 400, headers }
+        { status: 400,  }
       );
     }
 
@@ -31,19 +28,19 @@ export const GET = async (
       console.error("Post not found");
       return NextResponse.json(
         { success: false, message: "Post not found" },
-        { status: 404, headers }
+        { status: 404,  }
       );
     }
 
     return NextResponse.json(
       { success: true, data: singlePost[0] },
-      { status: 200, headers }
+      { status: 200,  }
     );
   } catch (error) {
     console.error("Error fetching post", error);
     return NextResponse.json(
       { success: false, message: "Error fetching post" },
-      { status: 500, headers }
+      { status: 500,  }
     );
   }
 };
