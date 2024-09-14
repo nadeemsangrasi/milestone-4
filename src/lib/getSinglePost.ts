@@ -1,7 +1,7 @@
 export const getSinglePost = async (slug: string) => {
   try {
     const res = await fetch(
-      `https://milestonee.vercel.app/api/blog/post/single-post/${slug}`,
+      `https://milestonee-4.vercel.app/api/blog/post/single-post/${slug}`,
       {
         method: "GET",
         headers: {
