@@ -18,7 +18,7 @@ export const generateStaticParams = async () => {
     slug: post.slug,
   }));
 };
-
+export const dynamic = 'force-dynamic'; 
 const PostPage = async ({
   params,
 }: {
