@@ -27,18 +27,19 @@ const PostPage = async ({
   const { slug } = params;
   const post = await getSinglePost(slug);
   const posts = await fetchPostsFromDb();
-  const postList = posts?.data ? posts.data.slice(0, 4) : [];
+  const postList = posts?.data
+    ? posts.data
+        .sort(
+          (a: IResponsePost, b: IResponsePost) => Number(b.id) - Number(a.id)
+        )
+        .slice(0, 4)
+    : [];
   return (
     <Wrapper>
       <div className="py-16">
         <Post post={post} />
         <CategoriesSection />
-        <CommentSection
-          post={post}
-          posts={postList.sort(
-            (a: IResponsePost, b: IResponsePost) => Number(b.id) - Number(a.id)
-          )}
-        />
+        <CommentSection post={post} posts={postList} />
       </div>
     </Wrapper>
   );
