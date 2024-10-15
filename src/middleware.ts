@@ -5,12 +5,21 @@ export async function middleware(request: NextRequest) {
   const token = request.cookies.get("next-auth.session-token");
   const pathName = request.nextUrl.pathname;
 
+  if (pathName === "/" || pathName === "/sign-in" || pathName === "/sign-up") {
+    return NextResponse.next();
+  }
+
   if (token) {
     return NextResponse.next();
   }
+
   if (
-    (!token && pathName.startsWith("/myPosts")) ||
-    pathName.startsWith("/write")
+    !token &&
+    (pathName.startsWith("/myPosts") ||
+      pathName.startsWith("/write") ||
+      pathName.startsWith("/allPosts") ||
+      pathName.startsWith("/category") ||
+      pathName.startsWith("/posts"))
   ) {
     return NextResponse.redirect(new URL("/sign-in", request.url));
   }
@@ -20,12 +29,13 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/myPosts/",
+    "/myPosts/:path*",
     "/write",
-    "/",
-    "/allPosts",
+    "/allPosts/:path*",
     "/category/:path*",
     "/posts/:path*",
     "/sign-in",
+    "/sign-up",
+    "/",
   ],
 };
