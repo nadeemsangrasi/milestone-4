@@ -23,10 +23,12 @@ export async function middleware(request: NextRequest) {
   ) {
     return NextResponse.redirect(new URL("/sign-in", request.url));
   }
+  
   if (
     token &&
     (pathName.startsWith("/sign-in") ||
       pathName.startsWith("/sign-up") ||
+    )
   ) {
     return NextResponse.redirect(new URL("/", request.url));
   }
