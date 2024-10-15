@@ -6,7 +6,7 @@ import ThemeContext from "@/contexts/ThemeContext";
 import Navbar from "@/components/layouts/Navbar";
 import { Toaster } from "@/components/ui/toaster";
 import PostsContext from "@/contexts/PostsContext";
-import Footer from "@/components/layouts/Footer";
+
 const raleway = Raleway({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -30,7 +30,6 @@ export default function RootLayout({
             >
               <Navbar />
               {children}
-              <Footer />
 
               <Toaster />
             </body>
