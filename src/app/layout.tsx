@@ -25,7 +25,7 @@ export default function RootLayout({
         <ThemeContext>
           <PostsContext>
             <body
-              className={`${raleway.className} bg-white dark:bg-primary-bg `}
+              className={`${raleway.className} bg-white dark:bg-primary-bg overflow-x-hidden `}
               suppressHydrationWarning
             >
               <Navbar />

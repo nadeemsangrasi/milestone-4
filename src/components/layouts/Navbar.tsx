@@ -21,11 +21,18 @@ const Navbar = (): JSX.Element => {
       <div className="w-full px-4 sm:px-0   mx-auto flex justify-between items-center py-4 my-0 flex-wrap gap-4">
         <div className="flex items-center gap-4 mx-auto">
           {status === "unauthenticated" ? (
-            <Link href={"/sign-in"}>
-              <Button className="cursor-pointer font-bold text-xl bg-transparent border-2 text-black dark:text-white dark:hover:text-black hover:text-white">
-                Sign in
-              </Button>
-            </Link>
+            <>
+              <Link href={"/sign-in"}>
+                <Button className="cursor-pointer font-bold text-xl bg-transparent border-2 text-black dark:text-white dark:hover:text-black hover:text-white">
+                  Sign in
+                </Button>
+              </Link>
+              <Link href={"/sign-up"}>
+                <Button className="cursor-pointer font-bold text-xl bg-transparent border-2 text-black dark:text-white dark:hover:text-black hover:text-white">
+                  Sign up
+                </Button>
+              </Link>
+            </>
           ) : (
             <>
               <Avatar>

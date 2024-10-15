@@ -16,7 +16,7 @@ const AllPosts = (): JSX.Element => {
         <h1 className="text-4xl sm:text-5xl font-bold text-center  my-16">
           Experience All posts
         </h1>
-        <div className="flex justify-between items-center gap-4 flex-wrap my-16">
+        <div className="flex justify-between items-center gap-6 space-y-3 flex-wrap my-16">
           {posts.length === 0 && status !== "loading" && !isLoading && (
             <h2 className="text-center my-8">No posts found</h2>
           )}

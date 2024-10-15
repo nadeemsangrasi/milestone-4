@@ -17,9 +17,10 @@ const MyPostCard = ({ post }: { post: IResponsePost }): JSX.Element => {
   const { getSingleCategory, editPost, deletePost } = usePosts()!;
   const category = getSingleCategory(post.categorySlug);
   const router: AppRouterInstance = useRouter();
+  const content = post?.content.slice(0, 100) + "....";
 
   return (
-    <div className="w-[450px] h-[600px] mx-auto lg:mx-0">
+    <div className="w-[450px]  mx-auto lg:mx-0 ">
       <div>
         <Image
           src={post?.imageUrl}
@@ -57,7 +58,7 @@ const MyPostCard = ({ post }: { post: IResponsePost }): JSX.Element => {
         <p className="text-sm sm:text-lg ">
           <div
             dangerouslySetInnerHTML={{
-              __html: post?.content.slice(0, 100) + "....",
+              __html: content,
             }}
           />
         </p>

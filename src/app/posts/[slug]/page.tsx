@@ -6,19 +6,6 @@ import { getSinglePost } from "@/lib/getSinglePost";
 import CategoriesSection from "@/components/sections/categoriesSection/CategoriesSection";
 import { IResponsePost } from "@/types/types";
 
-export const generateStaticParams = async () => {
-  const posts = await fetchPostsFromDb();
-
-  if (!posts || !posts.data || !Array.isArray(posts.data)) {
-    console.error("Error fetching posts or invalid data structure");
-    return [];
-  }
-
-  return posts.data.map((post: IResponsePost) => ({
-    slug: post.slug,
-  }));
-};
-
 const PostPage = async ({
   params,
 }: {

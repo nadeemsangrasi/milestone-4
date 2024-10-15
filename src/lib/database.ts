@@ -21,6 +21,7 @@ export const usersTable = pgTable("user", {
   email: text("email").unique(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
+  password: varchar("password", { length: 255 }),
 });
 
 export const categoriesTable = pgTable("categories", {

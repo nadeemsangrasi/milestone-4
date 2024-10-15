@@ -191,7 +191,7 @@ const CommentSection = ({
       )}
       <div className="lg:flex justify-between">
         <div className="lg:w-3/4">
-          {updatedComments.length === 0 &&
+          {updatedComments?.length === 0 &&
             status !== "loading" &&
             !loadingComments && <h2>No comments</h2>}
           {loadingComments && <Loader label="Loading comments..." />}

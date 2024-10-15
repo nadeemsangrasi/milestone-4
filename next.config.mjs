@@ -5,6 +5,7 @@ const nextConfig = {
       "res.cloudinary.com",
       "lh3.googleusercontent.com",
       "avatars.githubusercontent.com",
+      "github.com",
     ],
   },
   serverRuntimeConfig: {
