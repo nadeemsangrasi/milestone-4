@@ -90,7 +90,7 @@ const LogInPage = (): JSX.Element => {
       title: "Success",
       description: "You have successfully logged in",
     });
-    router.push("/");
+  
   };
 
   return (
