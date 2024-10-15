@@ -91,8 +91,7 @@ const LogInPage = (): JSX.Element => {
       description: "You have successfully logged in",
     });
 
-    router.refresh();  
-    router.push("/");
+ window.location.replace("/");
   
   };
 
