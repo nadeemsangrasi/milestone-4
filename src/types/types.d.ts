@@ -2,12 +2,17 @@ import { Dispatch, SetStateAction } from "react";
 import { Session } from "next-auth";
 import { JWT } from "next-auth/jwt";
 
-export interface CustomSession extends Session {
-  user: {
+declare module "next-auth/jwt" {
+  interface JWT {
     id?: string;
-    name?: string | null;
-    email?: string | null;
-    image?: string | null;
+  }
+}
+export interface CustomSession extends Session {
+  user?: {
+    id?: string | null | undefined;
+    name?: string | null | undefined;
+    email?: string | null | undefined;
+    image?: string | null | undefined;
   };
 }
 

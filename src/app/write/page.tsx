@@ -114,12 +114,12 @@ const WritePost = ({
       const res = await axios.post("/api/blog/post", {
         title: formData.title,
         content: value,
-        username: session.user.name || "",
+        username: session.user?.name || "",
         imageUrl: formData.imageUrl,
         categorySlug: formData.category,
         slug: slugify(formData.title || ""),
-        userId: session.user.id || "",
-        userImageUrl: session.user.image,
+        userId: session.user?.id || "",
+        userImageUrl: session.user?.image,
       });
 
       if (!res.data.success) {
@@ -156,7 +156,7 @@ const WritePost = ({
       setIsPublishing(true);
       const res = await axios.patch("/api/blog/post", {
         postId: singlePost?.id,
-        userId: session.user.id,
+        userId: session.user?.id,
         categorySlug: formData.category,
         title: formData.title,
         content: value,

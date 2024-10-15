@@ -44,7 +44,7 @@ const MyPostCard = ({ post }: { post: IResponsePost }): JSX.Element => {
           />
           <div>
             <p className="font-semibold text-black dark:text-white">
-              {post?.userId === session?.user.id ? "you" : post?.username}
+              {post?.userId === session?.user?.id ? "you" : post?.username}
             </p>
             <p className="text-sm text-gray-700 dark:text-gray-400  ]">
               {dayjs(post?.createdAt).format("DD/MM/YYYY")}
@@ -66,7 +66,7 @@ const MyPostCard = ({ post }: { post: IResponsePost }): JSX.Element => {
           <Button className="bg-sunset-orange text-lg sm:text-2xl font-semibold dark:text-white hover:bg-orange-400">
             <Link href={"/posts/" + post?.slug}>Read more</Link>
           </Button>
-          {status === "authenticated" && session.user.id === post?.userId && (
+          {status === "authenticated" && session.user?.id === post?.userId && (
             <div className="flex items-center justify-center gap-4 pt-2 lg:pt-0">
               <Edit3
                 size={30}

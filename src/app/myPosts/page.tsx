@@ -25,7 +25,7 @@ const MyPostsPage = (): JSX.Element => {
           )}
           {isLoading && <Loader label="Loading posts..." />}
           {posts
-            .filter((post: IResponsePost) => post.userId === session?.user.id)
+            .filter((post: IResponsePost) => post.userId === session?.user?.id)
             .sort(
               (a: IResponsePost, b: IResponsePost) =>
                 Number(b.id) - Number(a.id)

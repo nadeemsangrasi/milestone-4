@@ -9,7 +9,7 @@ import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
+
 import {
   Form,
   FormControl,
@@ -22,16 +22,8 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-
-export const signInSchema = z.object({
-  identifier: z
-    .string()
-    .regex(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/, "Invalid email address"),
-  password: z
-    .string()
-    .min(6, { message: "Password must be at least 6 characters" }),
-});
-
+import { signInSchema } from "@/schemas/SignInSchema";
+import * as z from "zod";
 const LogInPage = (): JSX.Element => {
   const { status } = useSession();
   const router = useRouter();
@@ -137,7 +129,7 @@ const LogInPage = (): JSX.Element => {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input {...field} name="identifier" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -150,7 +142,7 @@ const LogInPage = (): JSX.Element => {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input type="password" {...field} />
+                      <Input type="password" {...field} name="password" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

@@ -47,10 +47,10 @@ const CommentSection = ({
     try {
       const res: any = await axios.post("/api/blog/comment", {
         content: comment.content,
-        imageUrl: session.user.image,
+        imageUrl: session.user?.image,
         postId: post.id,
-        userId: session.user.id,
-        username: session.user.name,
+        userId: session.user?.id,
+        username: session.user?.name,
       });
 
       if (!res.data.success) {
@@ -112,7 +112,7 @@ const CommentSection = ({
         updatedComments.filter((myComment: any) => myComment.id !== comment.id)
       );
       const res = await axios.patch("/api/blog/comment", {
-        userId: session.user.id,
+        userId: session.user?.id,
         commentId: comment.id,
         content: comment.content,
       });

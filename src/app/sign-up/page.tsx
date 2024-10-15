@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-
 import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -17,22 +16,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-
 import axios, { AxiosError } from "axios";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
+import { signUpSchema } from "@/schemas/SignUpSchema";
 
-export const signUpSchema = z.object({
-  fullName: z.string().min(2, { message: "name must be at least 2 character" }),
-  email: z
-    .string()
-    .email({ message: "invalid email" })
-    .regex(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/),
-  password: z
-    .string()
-    .min(6, { message: "password must be at least 6 characters" }),
-});
+type SignUpFormValues = z.infer<typeof signUpSchema>;
 
 export default function SignUpForm() {
   const { toast } = useToast();
@@ -40,7 +30,8 @@ export default function SignUpForm() {
 
   const router = useRouter();
 
-  const form = useForm<z.infer<typeof signUpSchema>>({
+  // Explicitly type the form hook using SignUpFormValues
+  const form = useForm<SignUpFormValues>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
       fullName: "",
@@ -49,7 +40,7 @@ export default function SignUpForm() {
     },
   });
 
-  const onSubmit = async (data: z.infer<typeof signUpSchema>) => {
+  const onSubmit = async (data: SignUpFormValues) => {
     setIsSubmitting(true);
     try {
       const response = await axios.post("/api/sign-up", data);
@@ -65,30 +56,22 @@ export default function SignUpForm() {
         title: "Success",
         description: response.data.message,
       });
-      setIsSubmitting(false);
       router.push("/sign-in");
     } catch (error) {
-      console.error("Error during sign-up:", error);
-
       const axiosError = error as AxiosError;
-
-      console.error(
-        "There was a problem with your sign-up. Please try again.",
-        axiosError.stack
-      );
-
       toast({
         title: "Sign Up Failed",
         description: axiosError.message,
         variant: "destructive",
       });
+    } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen ">
-      <div className="w-full max-w-md p-8 space-y-8  rounded-lg shadow-md border-2 mt-6">
+    <div className="flex justify-center items-center min-h-screen">
+      <div className="w-full max-w-md p-8 space-y-8 rounded-lg shadow-md border-2 mt-6">
         <div className="text-center">
           <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-6">
             Sign up now
@@ -104,13 +87,8 @@ export default function SignUpForm() {
                 <FormItem>
                   <FormLabel>Full Name</FormLabel>
                   <FormControl>
-                    <Input
-                      {...field}
-                      name="fullName"
-                      placeholder="Enter your full name"
-                    />
+                    <Input {...field} placeholder="Enter your full name" />
                   </FormControl>
-
                   <FormMessage />
                 </FormItem>
               )}
@@ -122,17 +100,12 @@ export default function SignUpForm() {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input
-                      {...field}
-                      name="email"
-                      placeholder="Enter your email"
-                    />
+                    <Input {...field} placeholder="Enter your email" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
             <FormField
               name="password"
               control={form.control}
@@ -143,7 +116,6 @@ export default function SignUpForm() {
                     <Input
                       type="password"
                       {...field}
-                      name="password"
                       placeholder="Enter your password"
                     />
                   </FormControl>

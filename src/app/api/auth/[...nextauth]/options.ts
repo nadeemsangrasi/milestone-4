@@ -4,18 +4,13 @@ import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { db, usersTable } from "@/lib/database";
-
+import { AuthOptions, User } from "next-auth";
 import { CustomSession, CustomToken } from "@/types/types";
 import { JWT } from "next-auth/jwt";
-import { AdapterUser } from "next-auth/adapters";
+import { Adapter, AdapterUser } from "next-auth/adapters";
 import { eq } from "drizzle-orm";
 
-declare module "next-auth/jwt" {
-  interface JWT {
-    id?: string;
-  }
-}
-export const authOptions = {
+export const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
       id: "credentials",
@@ -60,20 +55,22 @@ export const authOptions = {
     }),
   ],
 
-  adapter: DrizzleAdapter(db),
+  adapter: DrizzleAdapter(db) as unknown as Adapter,
+
   callbacks: {
     async jwt({
       token,
       user,
     }: {
       token: JWT;
-      user?: AdapterUser;
-    }): Promise<CustomToken> {
+      user?: User | AdapterUser;
+    }): Promise<JWT> {
       if (user) {
         token.id = user.id?.toString();
       }
       return token;
     },
+
     async session({
       session,
       token,
@@ -83,19 +80,22 @@ export const authOptions = {
     }): Promise<CustomSession> {
       if (token) {
         session.user = {
-          id: token.id,
-          name: session.user.name || null,
-          email: session.user.email || null,
-          image: session.user.image || null,
+          id: token.id || "",
+          name: session.user?.name || "",
+          email: session.user?.email || "",
+          image: session.user?.image || "",
         } as CustomSession["user"];
       }
       return session;
     },
   },
+
   session: {
     strategy: "jwt",
   },
+
   secret: process.env.NEXTAUTH_SECRET,
+
   pages: {
     signIn: "/sign-in",
   },

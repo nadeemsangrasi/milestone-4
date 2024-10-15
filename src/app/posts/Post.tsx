@@ -40,7 +40,7 @@ const Post = ({ post }: { post: IResponsePost }): JSX.Element => {
           <div>
             <p className="font-semibold text-black dark:text-white">
               {" "}
-              {post?.userId === session?.user.id ? "you" : post?.username}
+              {post?.userId === session?.user?.id ? "you" : post?.username}
             </p>
             <p className="text-sm text-gray-700 dark:text-gray-400  ]">
               {dayjs(post?.createdAt).format("DD/MM/YYYY")}

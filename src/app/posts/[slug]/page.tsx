@@ -6,6 +6,7 @@ import { getSinglePost } from "@/lib/getSinglePost";
 import CategoriesSection from "@/components/sections/categoriesSection/CategoriesSection";
 import { IResponsePost } from "@/types/types";
 
+export const revalidate = 60;
 const PostPage = async ({
   params,
 }: {

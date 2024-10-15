@@ -68,7 +68,7 @@ export const POST = async (req: NextRequest) => {
         imageUrl,
         categorySlug,
         slug,
-        userId: session.user.id || "",
+        userId: session.user?.id || "",
         userImageUrl,
       })
       .returning();
